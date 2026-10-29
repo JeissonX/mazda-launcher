@@ -797,6 +797,14 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         return Ui.dp(this, v);
     }
 
+    static void pressable(View v) {
+        Ui.pressable(v, 0.92f);
+    }
+
+    static void pressable(View v, float scale) {
+        Ui.pressable(v, scale);
+    }
+
     @Override
     public void onBackPressed() {
         // Launcher: nothing to go back to.

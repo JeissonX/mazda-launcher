@@ -11,6 +11,17 @@ Directivas maestras: Edición quirúrgica, trazabilidad, cero dependencias infla
 - [x] Hito 4: Módulo de mantenimiento configurable (ciclo 5.000 km) y tarjetería visual sin TTS.
 - [x] Hito 5: Pipeline de compilación automática en GitHub Actions.
 
+## Resolución Autónoma de Incidentes CI/CD (Hito 5 Hotfix)
+
+- **Diagnóstico del Error en CI (Run #40966185210)**:
+  - Causa raíz: `javac` falló en `AppsActivity.java` (líneas 53, 74 y 92) al intentar invocar `MainActivity.pressable(...)`, método que había sido migrado a `Ui.pressable(...)` durante la modularización.
+  - Advertencia de entorno: Advertencia de obsolescencia de runtime de Node en `actions/setup-java@v4`.
+
+- **Corrección Quirúrgica**:
+  - Enrutamiento correcto en `AppsActivity.java` llamando directamente a `Ui.pressable(view, scale)`.
+  - Sobrecargas defensivas `pressable(View v)` añadidas en `Ui.java` y `MainActivity.java` para compatibilidad universal con escala táctil de 0.92f.
+  - Actualización de `.github/workflows/build.yml` a `actions/setup-java@v5` eliminando la advertencia de Node.
+
 ## Cierre de Fase e Integración Continua (CI/CD)
 
 - **Artefacto Compilado**: `build/MazdaOS.apk` (identificador en GitHub Actions: `MazdaOS-APK`).
@@ -30,7 +41,7 @@ Directivas maestras: Edición quirúrgica, trazabilidad, cero dependencias infla
 
 - **Pipeline de CI en GitHub Actions (`.github/workflows/build.yml`)**:
   - Ejecución en runner `ubuntu-latest` ante eventos `push` a la rama `main` y ejecución manual desatendida mediante `workflow_dispatch`.
-  - Configuración de JDK 17 headless (`actions/setup-java@v4`, distribución `temurin`).
+  - Configuración de JDK 17 headless (`actions/setup-java@v5`, distribución `temurin`).
   - Provisión de herramientas Android SDK oficiales (`android-actions/setup-android@v3`): `cmdline-tools;latest`, `platform-tools`, `platforms;android-33` y `build-tools;33.0.2`.
   - Ejecución del script de empaquetado: `chmod +x build.sh && ./build.sh` con variable de entorno `BUILD_TOOLS: "33.0.2"`.
   - Publicación del artefacto compilado (`actions/upload-artifact@v4`) con identificador `MazdaOS-APK`, ruta `build/MazdaOS.apk`, retención garantizada de 30 días y control de error estricto si el binario no es generado (`if-no-files-found: error`).

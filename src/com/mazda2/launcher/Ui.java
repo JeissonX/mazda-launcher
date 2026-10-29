@@ -127,6 +127,10 @@ final class Ui {
         return b;
     }
 
+    static void pressable(View v) {
+        pressable(v, 0.92f);
+    }
+
     static void pressable(View v, float scale) {
         v.setClickable(true);
         v.setOnTouchListener((view, e) -> {

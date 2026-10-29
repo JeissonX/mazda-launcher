@@ -50,7 +50,7 @@ public class AppsActivity extends Activity {
         circle.setShape(GradientDrawable.OVAL);
         circle.setColor(0x1FFFFFFF);
         back.setBackground(circle);
-        MainActivity.pressable(back);
+        Ui.pressable(back, 0.92f);
         back.setOnClickListener(v -> finish());
         header.addView(back, new LinearLayout.LayoutParams(dp(52), dp(52)));
 
@@ -71,7 +71,7 @@ public class AppsActivity extends Activity {
         tbg.setCornerRadius(dp(22));
         theme.setBackground(tbg);
         theme.setText(themeLabel());
-        MainActivity.pressable(theme);
+        Ui.pressable(theme, 0.95f);
         theme.setOnClickListener(v -> {
             String m = Ui.themeMode(this);
             Ui.setThemeMode(this, Ui.THEME_AUTO.equals(m) ? Ui.THEME_LIGHT
@@ -89,7 +89,7 @@ public class AppsActivity extends Activity {
         sbg.setColor(0x33FFFFFF);
         sbg.setCornerRadius(dp(22));
         setup.setBackground(sbg);
-        MainActivity.pressable(setup);
+        Ui.pressable(setup, 0.95f);
         setup.setOnClickListener(v -> startActivity(new android.content.Intent(this, SetupActivity.class)));
         LinearLayout.LayoutParams slp = new LinearLayout.LayoutParams(-2, -2);
         slp.leftMargin = dp(8);

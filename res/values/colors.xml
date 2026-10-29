@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mazda 2 DE Instrument Cluster Amber / Orange Accents -->
+    <color name="mazda_amber_primary">#FF6A00</color>
+    <color name="mazda_amber_deep">#E65100</color>
+    <color name="mazda_amber_light">#FFA726</color>
+    <color name="mazda_amber_glow">#4DFF6A00</color>
+    <color name="mazda_amber_subtle">#26FF6A00</color>
+
+    <!-- Deep Graphite Night Theme (Mazda 2 Dashboard Harmony) -->
+    <color name="mazda_graphite_bg">#121212</color>
+    <color name="mazda_graphite_surface">#1E1E1E</color>
+    <color name="mazda_graphite_card">#16161A</color>
+    <color name="mazda_graphite_dock">#0D0D11</color>
+    <color name="mazda_graphite_stroke">#2A2A30</color>
+    <color name="mazda_graphite_stroke_amber">#33FF6A00</color>
+
+    <!-- Telltales and Text -->
+    <color name="mazda_text_white">#FFFFFF</color>
+    <color name="mazda_text_secondary">#B3FFFFFF</color>
+    <color name="mazda_text_muted">#80FFFFFF</color>
+    <color name="mazda_telltale_lights">#00E676</color>
+</resources>

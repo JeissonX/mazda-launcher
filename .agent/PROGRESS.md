@@ -26,3 +26,4 @@ Directivas maestras: Edición quirúrgica, trazabilidad, cero dependencias infla
 - **Prioridad Multimedia**:
   - `NowPlaying` configurado con prioridad absoluta para almacenamiento local (USB / memoria interna) y sesiones del sistema (`MediaSessionManager` / `NotificationListenerService` para CarPlay y servicios de streaming).
   - Curva de ecualización en `EqAuto` fijada permanentemente a curva Hi-Fi (`MUSIC`) optimizada para USB y Bluetooth.
+

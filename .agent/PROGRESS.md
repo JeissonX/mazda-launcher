@@ -9,38 +9,39 @@ Directivas maestras: Edición quirúrgica, trazabilidad, cero dependencias infla
 - [x] Hito 2: Purga de servicios FM y desacoplamiento de radio analógica.
 - [x] Hito 3: Dock inferior persistente estilo Tesla y tarjeta de estado Mazda 2 DE.
 - [x] Hito 4: Módulo de mantenimiento configurable (ciclo 5.000 km) y tarjetería visual sin TTS.
-- [ ] Hito 5: Pipeline de compilación automática en GitHub Actions.
+- [x] Hito 5: Pipeline de compilación automática en GitHub Actions.
 
-## Resumen de Cambios Recientes (Hito 4)
+## Cierre de Fase e Integración Continua (CI/CD)
 
-- **Purga Total de Síntesis de Voz (TTS) y Clips de Audio**:
-  - `TextToSpeech` y `MediaPlayer` eliminados por completo de `GreeterService.java`.
-  - Archivo `Speech.java` extirpado del repositorio (cero bloatware, cero consumo residual de RAM/CPU).
-  - `GreeterService.java` refactorizado como servicio ultra liviano enfocado exclusivamente en enrutamiento de audio hardware y ecualización automática ante eventos de ACC y Bluetooth.
-  - Cero interferencias en los hilos de audio y cero latencia al encender el vehículo.
+- **Artefacto Compilado**: `build/MazdaOS.apk` (identificador en GitHub Actions: `MazdaOS-APK`).
+- **Canal de Despliegue y Compilación**:
+  - Repositorio remoto: GitHub (`origin/main`).
+  - Pipeline automatizado mediante `.github/workflows/build.yml` ejecutado en runner `ubuntu-latest` con JDK 17 (`temurin`) y Android SDK `build-tools;33.0.2` + `platform-tools`.
+  - Firma de depuración lista para instalación directa en hardware automotriz Revo (4GB/64GB, Android 7.1 NWD).
+  - Trazabilidad total de la base de código libre de bloatware, con 24 clases limpias bajo `com.mazda2.launcher`.
 
-- **Tarjetería Visual Contextual Sutil en `MainActivity.java`**:
-  - Sustitución de anuncios de voz por pastilla/tarjeta visual informativa en la cabecera del panel derecho (`buildClockCard`).
-  - Mensaje contextual visual dependiente de la hora ("Buen día", "Buenas tardes", "Buenas noches") con saludo personalizado según el perfil del conductor.
-  - Indicador dinámico de estado del vehículo en tiempo real ("● Todo en orden" en verde `#00E676`, aviso de mantenimiento preventivo si aplica).
+## Resumen de Cambios Recientes (Hito 5)
 
-- **Módulo de Mantenimiento Ajustable (Ciclo Estándar 5.000 km)**:
-  - Configuración post-overhaul (rodaje completado físicamente) con ciclo estándar de 5.000 km en `Odometer.java` y `OilActivity.java`.
-  - Persistencia en `SharedPreferences` con claves normalizadas: `last_oil_change_km`, `oil_interval_km` (editable: 5.000, 7.500, 10.000 km; por defecto 5.000 km) y `current_odometer_km`.
-  - Botón de acción rápida: "Registrar cambio de aceite hoy" (resetea el contador inmediatamente al kilometraje actual con feedback Toast).
-  - Tarjeta ilustrativa en `OilActivity.java`:
-    * Barra de progreso horizontal gráfica limpia con porcentaje dinámico de vida del aceite.
-    * Métricas explícitas: "Recorridos con este aceite: X km" / "Restantes: Y km para próximo cambio".
-    * Semáforo de estados de color: Verde/Ámbar durante uso normal; Naranja/Rojo (`#D32F2F`) si restan menos de 200 km o si el ciclo está vencido.
-  - Sincronización dinámica de la pastilla de mantenimiento en la tarjeta de vehículo de `MainActivity.java`, abriendo `OilActivity` al tacto.
+- **Auditoría y Endurecimiento de `build.sh`**:
+  - Salida de APK normalizada a `MazdaOS.apk` (y `MazdaOS-compartir.apk` para variante de distribución limpia).
+  - Verificación de rutas de entrada y compilación limpia de las 24 clases activas bajo el paquete `com.mazda2.launcher` sin referencias a módulos obsoletos (FM, TextToSpeech).
+  - Compatibilidad de build tools configurada por defecto a `build-tools;33.0.2` alineada con la plataforma `android-33` y retrocompatible con `minSdkVersion 25` (Android 7.1 Revo / NWD).
+  - Firma automática de depuración garantizada mediante generación desatendida de `debug.keystore` (RSA 2048-bit, validez 10.000 días) y firma dual v1/v2/v3 con `zipalign` y `apksigner` para instalación directa sin restricciones en la unidad central.
 
-- **Toggle Opcional de Pico y Placa (Barrancabermeja)**:
-  - Incorporación de clave `pico_placa_enabled` en `Profile.java` con valor por defecto `false` (vehículo opera en Barrancabermeja sin restricción vehicular).
-  - Switch táctil en `SetupActivity.java` para activar/desactivar la alerta voluntariamente.
-  - Si `pico_placa_enabled == false`, se suprimen completamente el cálculo, los textos y los contenedores de Pico y Placa en `MainActivity.java`, ahorrando cómputo de CPU y manteniendo la tarjeta de reloj/clima despejada y legible.
+- **Pipeline de CI en GitHub Actions (`.github/workflows/build.yml`)**:
+  - Ejecución en runner `ubuntu-latest` ante eventos `push` a la rama `main` y ejecución manual desatendida mediante `workflow_dispatch`.
+  - Configuración de JDK 17 headless (`actions/setup-java@v4`, distribución `temurin`).
+  - Provisión de herramientas Android SDK oficiales (`android-actions/setup-android@v3`): `cmdline-tools;latest`, `platform-tools`, `platforms;android-33` y `build-tools;33.0.2`.
+  - Ejecución del script de empaquetado: `chmod +x build.sh && ./build.sh` con variable de entorno `BUILD_TOOLS: "33.0.2"`.
+  - Publicación del artefacto compilado (`actions/upload-artifact@v4`) con identificador `MazdaOS-APK`, ruta `build/MazdaOS.apk`, retención garantizada de 30 días y control de error estricto si el binario no es generado (`if-no-files-found: error`).
 
-## Resumen de Cambios Anteriores (Hitos 1 a 3)
+## Resumen de Cambios Anteriores (Hitos 1 a 4)
 
+- **Hito 4 (Mantenimiento 5.000 km, Pastillas Visuales y Toggle Pico y Placa)**:
+  - Purga total de `TextToSpeech` y `MediaPlayer` en `GreeterService.java`, y eliminación de `Speech.java`.
+  - Tarjetería visual informativa con saludo contextual dinámico según la hora y estado del vehículo en tiempo real ("● Todo en orden" / aviso de mantenimiento).
+  - Módulo de mantenimiento parametrizable en `OilActivity.java` y `Odometer.java` con ciclo estándar de 5.000 km, barra gráfica de vida del aceite y botón de reseteo rápido.
+  - Toggle booleano `pico_placa_enabled` en `Profile.java` desactivado por defecto (Barrancabermeja), suprimiendo cómputo y contenedores en pantalla principal.
 - **Hito 3 (Dock Tesla & Tarjeta Mazda 2 DE)**:
   - Dock inferior persistente de 64dp de altura con 5 accesos directos: CarPlay/Zlink, Música local/USB, Cajón de aplicaciones, Ecualizador Hi-Fi y Pantalla apagada.
   - Tarjeta lateral izquierda (~35%) con silueta vectorial del Mazda 2 Hatchback DE (`mazda2.xml` y `mazda2_lights.xml`), velocímetro digital centralizado con interpolación suave a 60 FPS y telltale de luces conmutado por señal ILL.

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Builds the launcher APK without Gradle and optionally installs it over ADB.
 #
-#   sh build.sh            -> build/CleanLauncher.apk
+#   sh build.sh            -> build/MazdaOS.apk
 #   sh build.sh install    -> also `adb install -r` (RADIO=<ip>:5555 to pick a device)
 #
 # Works on Linux, macOS and Windows (Git Bash). Override any of these if needed:
@@ -15,7 +15,7 @@ cd "$(dirname "$0")"
 
 MIN_SDK=25        # Android 7.1, the NWD / Revo head unit
 TARGET_SDK=28
-APK_NAME=MazdaLauncher.apk
+APK_NAME=MazdaOS.apk
 
 die() { echo "error: $*" >&2; exit 1; }
 
@@ -44,7 +44,7 @@ if [ -z "$BUILD_TOOLS" ]; then
 fi
 BT=$SDK/build-tools/$BUILD_TOOLS
 [ -n "$BUILD_TOOLS" ] && [ -x "$BT/aapt2$EXE" ] \
-    || die "Android build-tools not found. Install them with: sdkmanager \"build-tools;36.0.0\""
+    || die "Android build-tools not found. Install them with: sdkmanager \"build-tools;33.0.2\""
 
 # ---------- JDK ----------
 if [ -n "$JAVA_HOME" ]; then
@@ -89,7 +89,7 @@ if [ "$VARIANT" = share ]; then
     cp -r res "$RES"
     rm -f "$RES"/drawable-nodpi/mazda2*.png "$RES"/drawable-nodpi/optra*.png "$RES"/raw/v_*.mp3
     rmdir "$RES"/raw "$RES"/drawable-nodpi 2>/dev/null || true
-    APK_NAME=MazdaLauncher-compartir.apk
+    APK_NAME=MazdaOS-compartir.apk
 fi
 
 "$BT/aapt2$EXE" compile --dir "$RES" -o build/res.zip

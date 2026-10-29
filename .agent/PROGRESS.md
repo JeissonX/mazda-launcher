@@ -22,6 +22,12 @@ Directivas maestras: Edición quirúrgica, trazabilidad, cero dependencias infla
   - Sobrecargas defensivas `pressable(View v)` añadidas en `Ui.java` y `MainActivity.java` para compatibilidad universal con escala táctil de 0.92f.
   - Actualización de `.github/workflows/build.yml` a `actions/setup-java@v5` eliminando la advertencia de Node.
 
+- **Confirmación de Compilación en Verde (Run #40967659964)**:
+  - Commit: `d2eb7d9` (`fix(ci): resolver fallo de compilacion en build.sh y actualizar workflow`).
+  - Estado: `success` en 38s.
+  - Artefacto generado: `MazdaOS-APK` (2.35 MB, `build/MazdaOS.apk`, retención 30 días).
+  - URL de ejecución: `https://github.com/JeissonX/mazda-launcher/actions/runs/40967659964`.
+
 ## Cierre de Fase e Integración Continua (CI/CD)
 
 - **Artefacto Compilado**: `build/MazdaOS.apk` (identificador en GitHub Actions: `MazdaOS-APK`).

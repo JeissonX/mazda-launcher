@@ -15,9 +15,12 @@
     <color name="mazda_graphite_stroke">#2A2A30</color>
     <color name="mazda_graphite_stroke_amber">#33FF6A00</color>
 
-    <!-- Telltales and Text -->
+    <!-- Telltales, Status and Text -->
     <color name="mazda_text_white">#FFFFFF</color>
     <color name="mazda_text_secondary">#B3FFFFFF</color>
     <color name="mazda_text_muted">#80FFFFFF</color>
     <color name="mazda_telltale_lights">#00E676</color>
+    <color name="mazda_status_ok">#00E676</color>
+    <color name="mazda_status_warn">#FF9800</color>
+    <color name="mazda_status_alert">#D32F2F</color>
 </resources>

@@ -14,16 +14,19 @@ import android.os.IBinder;
 import android.util.Log;
 
 /**
- * GPS odometer for the oil-change reminder (the car's CAN box does not report mileage).
- *
- * The user sets the dashboard reading once; from then on distance between good GPS fixes
- * is added. Fixes while parked or with poor accuracy are ignored so drift does not count.
+ * GPS odometer and vehicle maintenance tracker for Mazda 2 DE.
+ * Tracks distance driven and monitors oil-change cycles (default 5.000 km).
  */
 public class Odometer extends Service implements LocationListener {
 
     private static final String TAG = "Odometer";
-    static final int DEFAULT_INTERVAL_KM = 5000;
-    static final int WARN_KM = 500;
+    public static final int DEFAULT_INTERVAL_KM = 5000;
+    public static final int WARN_KM = 200; // Alerta naranja/roja cuando restan < 200 km o se vence
+
+    public static final String PREF_LAST_CHANGE_KM = "last_oil_change_km";
+    public static final String PREF_INTERVAL_KM = "oil_interval_km";
+    public static final String PREF_CURRENT_KM = "current_odometer_km";
+    public static final String PREF_GPS_KM = "gps_km";
 
     private LocationManager lm;
     private Location last;
@@ -61,7 +64,7 @@ public class Odometer extends Service implements LocationListener {
         last = l;
         if (pendingMeters >= 100) { // persist every 100 m
             SharedPreferences p = prefs(this);
-            p.edit().putFloat("gps_km", p.getFloat("gps_km", 0) + pendingMeters / 1000f).apply();
+            p.edit().putFloat(PREF_GPS_KM, p.getFloat(PREF_GPS_KM, 0) + pendingMeters / 1000f).apply();
             pendingMeters = 0;
         }
     }
@@ -73,7 +76,7 @@ public class Odometer extends Service implements LocationListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        lm.removeUpdates(this);
+        if (lm != null) lm.removeUpdates(this);
     }
 
     @Override
@@ -81,44 +84,78 @@ public class Odometer extends Service implements LocationListener {
         return null;
     }
 
-    // ---------- Shared state ----------
+    // ---------- Shared state & Maintenance API ----------
 
     static SharedPreferences prefs(Context c) {
         return c.getSharedPreferences("odometer", Context.MODE_PRIVATE);
     }
 
     static boolean isConfigured(Context c) {
-        return prefs(c).contains("base_km");
+        SharedPreferences p = prefs(c);
+        return p.contains(PREF_CURRENT_KM) || p.contains("base_km");
     }
 
     /** Estimated dashboard reading: the value the user entered plus GPS distance since. */
     static int currentKm(Context c) {
         SharedPreferences p = prefs(c);
-        return Math.round(p.getInt("base_km", 0) + p.getFloat("gps_km", 0));
+        int base = p.getInt(PREF_CURRENT_KM, p.getInt("base_km", 0));
+        return Math.round(base + p.getFloat(PREF_GPS_KM, 0));
     }
 
     static void setCurrentKm(Context c, int km) {
-        prefs(c).edit().putInt("base_km", km).putFloat("gps_km", 0).apply();
+        prefs(c).edit()
+                .putInt(PREF_CURRENT_KM, km)
+                .putInt("base_km", km)
+                .putFloat(PREF_GPS_KM, 0)
+                .apply();
     }
 
+    /** Odómetro al momento del último cambio de aceite registrado. */
     static int lastChangeKm(Context c) {
-        return prefs(c).getInt("last_change_km", currentKm(c));
+        SharedPreferences p = prefs(c);
+        return p.getInt(PREF_LAST_CHANGE_KM, p.getInt("last_change_km", currentKm(c)));
     }
 
     static void setLastChangeKm(Context c, int km) {
-        prefs(c).edit().putInt("last_change_km", km).apply();
+        prefs(c).edit()
+                .putInt(PREF_LAST_CHANGE_KM, km)
+                .putInt("last_change_km", km)
+                .apply();
     }
 
+    /** Intervalo de cambio de aceite en km (editable: 5000, 7500, 10000 km; por defecto 5000 km). */
     static int intervalKm(Context c) {
-        return prefs(c).getInt("interval_km", DEFAULT_INTERVAL_KM);
+        SharedPreferences p = prefs(c);
+        return p.getInt(PREF_INTERVAL_KM, p.getInt("interval_km", DEFAULT_INTERVAL_KM));
     }
 
     static void setIntervalKm(Context c, int km) {
-        prefs(c).edit().putInt("interval_km", km).apply();
+        prefs(c).edit()
+                .putInt(PREF_INTERVAL_KM, km)
+                .putInt("interval_km", km)
+                .apply();
     }
 
-    /** Km left until the next oil change (negative when overdue). */
+    /** Km recorridos con el aceite actual. */
+    static int drivenKm(Context c) {
+        return Math.max(0, currentKm(c) - lastChangeKm(c));
+    }
+
+    /** Km restantes para el próximo cambio (negativo si está vencido). */
     static int remainingKm(Context c) {
-        return lastChangeKm(c) + intervalKm(c) - currentKm(c);
+        return (lastChangeKm(c) + intervalKm(c)) - currentKm(c);
+    }
+
+    /** Porcentaje de vida útil del aceite (0% a 100%). */
+    static int lifePercent(Context c) {
+        int interval = Math.max(1, intervalKm(c));
+        int remaining = remainingKm(c);
+        if (remaining <= 0) return 0;
+        return Math.max(0, Math.min(100, Math.round((remaining * 100f) / interval)));
+    }
+
+    /** Resetea el ciclo de cambio al kilometraje actual. */
+    static void resetToNow(Context c) {
+        setLastChangeKm(c, currentKm(c));
     }
 }

@@ -8,48 +8,46 @@ Directivas maestras: Edición quirúrgica, trazabilidad, cero dependencias infla
 - [x] Hito 1: Descarga de referencias e independización de repositorio Git.
 - [x] Hito 2: Purga de servicios FM y desacoplamiento de radio analógica.
 - [x] Hito 3: Dock inferior persistente estilo Tesla y tarjeta de estado Mazda 2 DE.
-- [ ] Hito 4: Módulo de mantenimiento post-overhaul (meta 2.000 km) y alertas TTS.
+- [x] Hito 4: Módulo de mantenimiento configurable (ciclo 5.000 km) y tarjetería visual sin TTS.
 - [ ] Hito 5: Pipeline de compilación automática en GitHub Actions.
 
-## Resumen de Cambios Recientes (Hito 3)
+## Resumen de Cambios Recientes (Hito 4)
 
-- **Dock Inferior Persistente (Estilo Tesla)**:
-  - Barra de navegación fija inferior con altura táctil ergonómica de 64dp (`buildDock`) y fondo grafito oscuro (`#0D0D11`).
-  - Mapeo exacto de los 5 accesos directos principales con touch targets de 56dp x 56dp y microinteracciones fluidas (`pressable`):
-    1. **CarPlay / Zlink**: Disparo prioritario de paquetes de enlace telefónico (`com.zjinnova.zlink`, `com.tlink`, `com.zjinnova.zlink5`, AutoKit, fallback inteligente).
-    2. **Música Local / USB**: Acceso directo al reproductor local de medios y almacenamiento USB con control de sesiones.
-    3. **Cajón de Aplicaciones**: Lanzador limpio y libre de bloatware (`AppsActivity`).
-    4. **Ajustes / EQ**: Acceso directo al ecualizador Hi-Fi paramétrico de 10 bandas y pad de balance/fader (`EqActivity`).
-    5. **Pantalla Apagada**: Disparo nativo de display-off por hardware (`ScreenOffActivity`) conservando audio y mandos de timón.
+- **Purga Total de Síntesis de Voz (TTS) y Clips de Audio**:
+  - `TextToSpeech` y `MediaPlayer` eliminados por completo de `GreeterService.java`.
+  - Archivo `Speech.java` extirpado del repositorio (cero bloatware, cero consumo residual de RAM/CPU).
+  - `GreeterService.java` refactorizado como servicio ultra liviano enfocado exclusivamente en enrutamiento de audio hardware y ecualización automática ante eventos de ACC y Bluetooth.
+  - Cero interferencias en los hilos de audio y cero latencia al encender el vehículo.
 
-- **Tarjeta de Vehículo Mazda 2 DE (Panel Lateral Izquierdo ~35%)**:
-  - Maquetación ergonómica de tarjeta lateral izquierda (`buildVehicleCard`) con ponderación `weight(0.35f)`.
-  - Silueta vectorial dedicada y precisa del Mazda 2 Hatchback chasis DE (`res/drawable/mazda2.xml` y `res/drawable/mazda2_lights.xml`).
-  - Velocímetro digital centralizado con animación fluida a 60 FPS e interpolación continua (`ValueAnimator` con `DecelerateInterpolator`), eliminando fluctuaciones y saltos bruscos entre lecturas de GPS.
-  - Indicador visual telltale de modo noche/luces activadas (`ic_lights.xml`) y crossfade suave de 600ms entre la silueta normal y la silueta con faros encendidos conectado al broadcast `com.nwd.ACTION_ILL_STATE_CHANGE`.
-  - Pastilla de estado de odómetro/aceite vinculada a `OilActivity`.
+- **Tarjetería Visual Contextual Sutil en `MainActivity.java`**:
+  - Sustitución de anuncios de voz por pastilla/tarjeta visual informativa en la cabecera del panel derecho (`buildClockCard`).
+  - Mensaje contextual visual dependiente de la hora ("Buen día", "Buenas tardes", "Buenas noches") con saludo personalizado según el perfil del conductor.
+  - Indicador dinámico de estado del vehículo en tiempo real ("● Todo en orden" en verde `#00E676`, aviso de mantenimiento preventivo si aplica).
 
-- **Contenedor Multimedia USB y Acceso Rápido CarPlay (Panel Derecho ~65%)**:
-  - Contenedor multimedia para USB y almacenamiento local (`buildMusicCard`) con visualización de carátula, metadatos ID3 y controles táctiles de reproducción (Prev, Play/Pause con acento ámbar, Next).
-  - Tarjeta de enlace rápido a CarPlay / Android Auto (`buildCarPlayCard`) con botón táctil directo.
-  - Tarjeta companion de reloj digital (`HH:mm`), fecha completa en español y estado de clima en tiempo real (`buildClockCard`).
+- **Módulo de Mantenimiento Ajustable (Ciclo Estándar 5.000 km)**:
+  - Configuración post-overhaul (rodaje completado físicamente) con ciclo estándar de 5.000 km en `Odometer.java` y `OilActivity.java`.
+  - Persistencia en `SharedPreferences` con claves normalizadas: `last_oil_change_km`, `oil_interval_km` (editable: 5.000, 7.500, 10.000 km; por defecto 5.000 km) y `current_odometer_km`.
+  - Botón de acción rápida: "Registrar cambio de aceite hoy" (resetea el contador inmediatamente al kilometraje actual con feedback Toast).
+  - Tarjeta ilustrativa en `OilActivity.java`:
+    * Barra de progreso horizontal gráfica limpia con porcentaje dinámico de vida del aceite.
+    * Métricas explícitas: "Recorridos con este aceite: X km" / "Restantes: Y km para próximo cambio".
+    * Semáforo de estados de color: Verde/Ámbar durante uso normal; Naranja/Rojo (`#D32F2F`) si restan menos de 200 km o si el ciclo está vencido.
+  - Sincronización dinámica de la pastilla de mantenimiento en la tarjeta de vehículo de `MainActivity.java`, abriendo `OilActivity` al tacto.
 
-- **Paleta de Color y Estilo Mazda 2**:
-  - Creación de `res/values/colors.xml` con acentos ámbar/naranja (#FF6A00 / #E65100 / #FFA726) y gris grafito profundo (#121212 / #1E1E1E / #16161A), armonizando con el cuadro de instrumentos nocturno del Mazda 2.
-  - Actualización de `Ui.java` con tokens de color, fondos de gradiente grafito con resplandor ámbar radial sutil y botones de acción primarios en ámbar Mazda.
+- **Toggle Opcional de Pico y Placa (Barrancabermeja)**:
+  - Incorporación de clave `pico_placa_enabled` en `Profile.java` con valor por defecto `false` (vehículo opera en Barrancabermeja sin restricción vehicular).
+  - Switch táctil en `SetupActivity.java` para activar/desactivar la alerta voluntariamente.
+  - Si `pico_placa_enabled == false`, se suprimen completamente el cálculo, los textos y los contenedores de Pico y Placa en `MainActivity.java`, ahorrando cómputo de CPU y manteniendo la tarjeta de reloj/clima despejada y legible.
 
-## Resumen de Cambios Anteriores (Hitos 1 y 2)
+## Resumen de Cambios Anteriores (Hitos 1 a 3)
 
-- **Referencias Aisladas**: Repositorios de referencia `.ref_cleanlauncher` y `.ref_tlauncher` clonados en carpetas de solo lectura en `C:\Users\Jeisson\Documents\AGENCIA`.
-- **Independización del Repositorio**: Inicialización de repositorio Git limpio (`main`) en `mazda-launcher` sin historial previo.
-- **Identidad del Sistema**: `applicationId` configurado en `com.mazda2.launcher` y nombre visible como `"Mazda OS"`. Refactorización de paquetes Java a `com.mazda2.launcher`.
-- **Purga de Bloatware FM**:
-  - `RadioActivity` eliminada de `AndroidManifest.xml` y del árbol de código fuente.
-  - `RadioClient` y `DialView` extirpados.
-  - Polling periódico de frecuencia FM (`radioPoll`) que consultaba la MCU cada 1000ms desactivado en `MainActivity`.
-  - Conexión Binder con `com.nwd.radio.service` eliminada tanto en `MainActivity` como en `GreeterService`.
-  - Reemplazo del widget FM en pantalla principal por tarjeta de reloj/fecha/estado con escala vertical equilibrada.
-  - Dock inferior actualizado: acceso directo a música local / reproductor en lugar del sintonizador FM analógico.
-- **Prioridad Multimedia**:
-  - `NowPlaying` configurado con prioridad absoluta para almacenamiento local (USB / memoria interna) y sesiones del sistema (`MediaSessionManager` / `NotificationListenerService` para CarPlay y servicios de streaming).
-  - Curva de ecualización en `EqAuto` fijada permanentemente a curva Hi-Fi (`MUSIC`) optimizada para USB y Bluetooth.
+- **Hito 3 (Dock Tesla & Tarjeta Mazda 2 DE)**:
+  - Dock inferior persistente de 64dp de altura con 5 accesos directos: CarPlay/Zlink, Música local/USB, Cajón de aplicaciones, Ecualizador Hi-Fi y Pantalla apagada.
+  - Tarjeta lateral izquierda (~35%) con silueta vectorial del Mazda 2 Hatchback DE (`mazda2.xml` y `mazda2_lights.xml`), velocímetro digital centralizado con interpolación suave a 60 FPS y telltale de luces conmutado por señal ILL.
+  - Contenedor multimedia dedicado para USB y tarjeta de conexión rápida para CarPlay.
+  - Paleta ámbar (#FF6A00 / #E65100) y gris grafito profundo (#121212 / #1E1E1E) en `colors.xml` y `Ui.java`.
+- **Hitos 1 y 2 (Base Limpia y Purga FM)**:
+  - Desvinculación de repositorios de referencia `.ref_cleanlauncher` y `.ref_tlauncher`.
+  - Independización de Git, paquete configurado en `com.mazda2.launcher` y nombre visible "Mazda OS".
+  - Purga total de radio FM analógica (`RadioActivity`, `RadioClient`, `DialView`, polling MCU de 1000ms y conexión Binder a `com.nwd.radio.service`).
+  - Prioridad de reproducción fijada a USB / medios locales y ecualización Hi-Fi predeterminada.

@@ -23,6 +23,8 @@ import android.widget.LinearLayout;
 import android.widget.TextClock;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 public class MainActivity extends Activity implements NowPlaying.Listener, LocationListener {
 
     private static final String EQ = "com.nwd.audioset/.home_horizontalActivity";
@@ -33,6 +35,10 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
     private final Handler handler = new Handler();
     private NowPlaying nowPlaying;
     private LocationManager lm;
+
+    // Saludo visual y estado del vehículo (sin síntesis TTS)
+    private TextView greetingText, vehicleStatusText;
+    private GradientDrawable vehicleStatusBg;
 
     // Velocímetro digital por GPS con interpolación suave
     private TextView speedView, speedUnitView, gpsBadge;
@@ -263,14 +269,33 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         return card;
     }
 
-    // ---------- Reloj, Fecha y Clima ----------
+    // ---------- Reloj, Fecha y Clima (con Saludo Visual Contextual) ----------
 
     private View buildClockCard() {
         LinearLayout card = new LinearLayout(this);
         card.setOrientation(LinearLayout.VERTICAL);
         card.setGravity(Gravity.CENTER_VERTICAL);
-        card.setPadding(dp(18), dp(14), dp(18), dp(14));
+        card.setPadding(dp(18), dp(12), dp(18), dp(12));
         card.setBackground(Ui.card(this));
+
+        // Cabecera informativa: Saludo contextual y estado breve del vehículo
+        LinearLayout headerRow = new LinearLayout(this);
+        headerRow.setGravity(Gravity.CENTER_VERTICAL);
+
+        greetingText = Ui.text(this, "Bienvenido", 13, Ui.COLOR_AMBER);
+        greetingText.setTypeface(Typeface.DEFAULT_BOLD);
+        greetingText.setGravity(Gravity.START);
+        headerRow.addView(greetingText, new LinearLayout.LayoutParams(0, -2, 1f));
+
+        vehicleStatusText = Ui.text(this, "● Todo en orden", 11, 0xFF00E676);
+        vehicleStatusText.setTypeface(Typeface.DEFAULT_BOLD);
+        vehicleStatusText.setPadding(dp(8), dp(3), dp(8), dp(3));
+        vehicleStatusBg = new GradientDrawable();
+        vehicleStatusBg.setColor(0x2600E676);
+        vehicleStatusBg.setCornerRadius(dp(10));
+        vehicleStatusText.setBackground(vehicleStatusBg);
+        headerRow.addView(vehicleStatusText);
+        card.addView(headerRow);
 
         TextClock time = new TextClock(this);
         time.setFormat24Hour("HH:mm");
@@ -280,6 +305,7 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         time.setTypeface(Typeface.DEFAULT_BOLD);
         time.setIncludeFontPadding(false);
         time.setGravity(Gravity.START);
+        time.setPadding(0, dp(2), 0, 0);
         card.addView(time);
 
         TextClock date = new TextClock(this);
@@ -287,7 +313,7 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         date.setFormat12Hour("EEEE, d 'de' MMMM");
         date.setTextSize(13);
         date.setTextColor(0xB3FFFFFF);
-        date.setPadding(0, dp(2), 0, dp(8));
+        date.setPadding(0, dp(1), 0, dp(6));
         date.setGravity(Gravity.START);
         card.addView(date);
 
@@ -296,9 +322,9 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         weatherIcon = new ImageView(this);
         weatherIcon.setImageResource(R.drawable.ic_w_cloud);
         weatherIcon.setColorFilter(0xFFFFE07A);
-        wRow.addView(weatherIcon, new LinearLayout.LayoutParams(dp(24), dp(24)));
+        wRow.addView(weatherIcon, new LinearLayout.LayoutParams(dp(22), dp(22)));
 
-        weatherTemp = Ui.text(this, "--°", 17, Color.WHITE);
+        weatherTemp = Ui.text(this, "--°", 16, Color.WHITE);
         weatherTemp.setTypeface(Typeface.DEFAULT_BOLD);
         weatherTemp.setPadding(dp(6), 0, dp(6), 0);
         wRow.addView(weatherTemp);
@@ -306,6 +332,14 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         weatherDesc = Ui.text(this, "Clima", 12, 0xB3FFFFFF);
         wRow.addView(weatherDesc);
         card.addView(wRow);
+
+        // Si Pico y Placa está activado opcionalmente, mostrar estado; si está desactivado, cero cálculo y cero contenedores
+        if (Profile.picoPlacaEnabled(this)) {
+            TextView picoView = Ui.text(this, "Pico y Placa activo", 11, Ui.COLOR_AMBER_LIGHT);
+            picoView.setGravity(Gravity.START);
+            picoView.setPadding(0, dp(4), 0, 0);
+            card.addView(picoView);
+        }
 
         Ui.pressable(card, 0.97f);
         card.setOnClickListener(v -> fetchWeather(true));
@@ -600,15 +634,57 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         if (car != null) car.animate().alpha(on ? 0f : 1f).setDuration(600).start();
     }
 
+    private void updateGreeting() {
+        if (greetingText == null) return;
+        int h = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        String salutation = (h < 12 ? "Buen día" : h < 19 ? "Buenas tardes" : "Buenas noches");
+        String name = Profile.name(this);
+        greetingText.setText(salutation + (name.isEmpty() ? "" : ", " + name));
+    }
+
+    private void updateVehicleStatus() {
+        if (vehicleStatusText == null) return;
+        if (!Odometer.isConfigured(this)) {
+            vehicleStatusText.setText("● Odómetro listo");
+            vehicleStatusText.setTextColor(0xB3FFFFFF);
+            if (vehicleStatusBg != null) vehicleStatusBg.setColor(0x20FFFFFF);
+            return;
+        }
+        int left = Odometer.remainingKm(this);
+        if (left < 0) {
+            vehicleStatusText.setText("⚠️ Aceite vencido");
+            vehicleStatusText.setTextColor(0xFFD32F2F);
+            if (vehicleStatusBg != null) vehicleStatusBg.setColor(0x33D32F2F);
+        } else if (left <= Odometer.WARN_KM) {
+            vehicleStatusText.setText("⚠️ Cambio en " + OilActivity.fmt(left) + " km");
+            vehicleStatusText.setTextColor(0xFFFFA726);
+            if (vehicleStatusBg != null) vehicleStatusBg.setColor(0x33FFA726);
+        } else {
+            vehicleStatusText.setText("● Todo en orden");
+            vehicleStatusText.setTextColor(0xFF00E676);
+            if (vehicleStatusBg != null) vehicleStatusBg.setColor(0x2600E676);
+        }
+    }
+
     private void updateOil() {
+        if (oilInfo == null) return;
         if (!Odometer.isConfigured(this)) {
             oilInfo.setText("Aceite: configurar");
             oilBg.setColor(0x26FFFFFF);
             return;
         }
         int left = Odometer.remainingKm(this);
-        oilInfo.setText(left < 0 ? "Aceite: ¡ya toca el cambio!" : "Aceite: faltan " + OilActivity.fmt(left) + " km");
-        oilBg.setColor(left < 0 ? 0xCCE53935 : left <= Odometer.WARN_KM ? 0xCCFF9800 : 0x26FFFFFF);
+        int life = Odometer.lifePercent(this);
+        if (left < 0) {
+            oilInfo.setText("Aceite: ¡vencido (" + OilActivity.fmt(-left) + " km)!");
+            oilBg.setColor(0xCCD32F2F);
+        } else if (left <= Odometer.WARN_KM) {
+            oilInfo.setText("Aceite: faltan " + OilActivity.fmt(left) + " km (" + life + "%)");
+            oilBg.setColor(0xCCFF9800);
+        } else {
+            oilInfo.setText("Aceite: faltan " + OilActivity.fmt(left) + " km (" + life + "%)");
+            oilBg.setColor(0x26FF6A00);
+        }
     }
 
     // ---------- Clima ----------
@@ -634,6 +710,9 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
     private final Runnable periodic = new Runnable() {
         public void run() {
             if (Ui.isDark(MainActivity.this) != createdDark) recreate();
+            updateGreeting();
+            updateVehicleStatus();
+            updateOil();
             fetchWeather(false);
             handler.postDelayed(this, 60 * 1000);
         }
@@ -648,6 +727,8 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
             recreate();
             return;
         }
+        updateGreeting();
+        updateVehicleStatus();
         updateOil();
         showWeather(Weather.cached(this));
         registerReceiver(illReceiver, new android.content.IntentFilter("com.nwd.ACTION_ILL_STATE_CHANGE"));

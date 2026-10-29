@@ -33,7 +33,7 @@ public class SetupActivity extends Activity {
 
     private EditText name;
     private ImageView carPreview;
-    private Switch voice, picoPlaca;
+    private Switch picoPlaca;
     private TextView homeBtn, locationBtn, notifBtn, overlayBtn;
 
     @Override
@@ -108,8 +108,7 @@ public class SetupActivity extends Activity {
         tip.setPadding(0, dp(6), 0, dp(4));
         card.addView(tip);
 
-        voice = toggle(card, "Saludo por voz al encender el carro", Profile.voiceEnabled(this));
-        picoPlaca = toggle(card, "Recordar pico y placa los miércoles (Quito)", Profile.picoPlacaEnabled(this));
+        picoPlaca = toggle(card, "Activar alerta de Pico y Placa (desactivado en Barrancabermeja)", Profile.picoPlacaEnabled(this));
         showPhoto();
         return card;
     }
@@ -259,7 +258,7 @@ public class SetupActivity extends Activity {
     private void finishSetup() {
         Profile.prefs(this).edit()
                 .putString("name", name.getText().toString().trim())
-                .putBoolean("voice", voice.isChecked())
+                .putBoolean(Profile.PREF_PICO_PLACA, picoPlaca.isChecked())
                 .putBoolean("picoplaca", picoPlaca.isChecked())
                 .putBoolean("setup_done", true)
                 .apply();

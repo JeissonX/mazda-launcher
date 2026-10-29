@@ -17,6 +17,8 @@ final class Profile {
 
     private Profile() { }
 
+    static final String PREF_PICO_PLACA = "pico_placa_enabled";
+
     static SharedPreferences prefs(Context c) {
         return c.getSharedPreferences("profile", Context.MODE_PRIVATE);
     }
@@ -25,12 +27,25 @@ final class Profile {
         return prefs(c).getString("name", "").trim();
     }
 
+    /** TTS vocal synthesis purged for 60 FPS performance and zero audio blocking. */
     static boolean voiceEnabled(Context c) {
-        return prefs(c).getBoolean("voice", true);
+        return false;
     }
 
+    /** Toggle for Pico y Placa; defaults to false (vehicle operates in Barrancabermeja). */
     static boolean picoPlacaEnabled(Context c) {
-        return prefs(c).getBoolean("picoplaca", false);
+        SharedPreferences p = prefs(c);
+        if (p.contains(PREF_PICO_PLACA)) {
+            return p.getBoolean(PREF_PICO_PLACA, false);
+        }
+        return p.getBoolean("picoplaca", false);
+    }
+
+    static void setPicoPlacaEnabled(Context c, boolean enabled) {
+        prefs(c).edit()
+                .putBoolean(PREF_PICO_PLACA, enabled)
+                .putBoolean("picoplaca", enabled)
+                .apply();
     }
 
     static boolean isSetupDone(Context c) {

@@ -111,6 +111,8 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         createdDark = Ui.isDark(this);
         createdProfile = profileStamp();
 
+        showWeather(Weather.cached(this));
+
         if (!Profile.isSetupDone(this) && Profile.bundledCar(this, false) == 0) {
             startActivity(new Intent(this, SetupActivity.class));
         }
@@ -222,16 +224,30 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         LinearLayout card = new LinearLayout(this);
         card.setOrientation(LinearLayout.VERTICAL);
         card.setPadding(dp(18), dp(14), dp(18), dp(14));
-        card.setBackground(Ui.card(this));
+
+        float r = dp(20);
+        GradientDrawable base = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
+                new int[]{0xFF181F2C, 0xFF12151E, 0xFF0E1118});
+        base.setCornerRadius(r);
+        base.setStroke(dp(1), 0x264A6A94);
+
+        GradientDrawable glow = new GradientDrawable();
+        glow.setCornerRadius(r);
+        glow.setGradientType(GradientDrawable.RADIAL_GRADIENT);
+        glow.setGradientRadius(dp(360));
+        glow.setGradientCenter(0.9f, 0.1f);
+        glow.setColors(new int[]{0x223B82F6, 0x003B82F6});
+
+        card.setBackground(new LayerDrawable(new Drawable[]{base, glow}));
 
         LinearLayout top = new LinearLayout(this);
         top.setGravity(Gravity.CENTER_VERTICAL);
         ImageView icon = new ImageView(this);
         icon.setImageResource(R.drawable.ic_carplay);
-        icon.setColorFilter(Ui.COLOR_AMBER);
+        icon.setColorFilter(0xFF60A5FA);
         top.addView(icon, new LinearLayout.LayoutParams(dp(26), dp(26)));
 
-        TextView badge = Ui.text(this, "CARPLAY / ZLINK", 11, Ui.COLOR_AMBER);
+        TextView badge = Ui.text(this, "CARPLAY / ZLINK", 11, 0xFF93C5FD);
         badge.setTypeface(Typeface.DEFAULT_BOLD);
         badge.setLetterSpacing(0.12f);
         badge.setPadding(dp(8), 0, 0, 0);
@@ -246,23 +262,13 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
 
         TextView sub = Ui.text(this, "Zlink · Tlink · CarPlay · Android Auto", 12, 0xB3FFFFFF);
         sub.setGravity(Gravity.START);
-        sub.setPadding(0, dp(2), 0, dp(10));
+        sub.setPadding(0, dp(2), 0, dp(8));
         card.addView(sub);
 
-        LinearLayout btn = new LinearLayout(this);
-        btn.setGravity(Gravity.CENTER);
-        btn.setPadding(dp(14), dp(5), dp(14), dp(5));
-        GradientDrawable btnBg = new GradientDrawable();
-        btnBg.setColor(0x26FF6A00);
-        btnBg.setCornerRadius(dp(14));
-        btnBg.setStroke(dp(1), Ui.COLOR_AMBER);
-        btn.setBackground(btnBg);
-
-        TextView btnTxt = Ui.text(this, "CONECTAR AHORA", 11, Ui.COLOR_AMBER_LIGHT);
-        btnTxt.setTypeface(Typeface.DEFAULT_BOLD);
-        btnTxt.setLetterSpacing(0.08f);
-        btn.addView(btnTxt);
-        card.addView(btn, new LinearLayout.LayoutParams(-2, -2));
+        TextView btn = Ui.capsuleButton(this, "CONECTAR AHORA", true, this::openCarPlay);
+        LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(-2, -2);
+        blp.topMargin = dp(2);
+        card.addView(btn, blp);
 
         Ui.pressable(card, 0.96f);
         card.setOnClickListener(v -> openCarPlay());
@@ -320,16 +326,18 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         LinearLayout wRow = new LinearLayout(this);
         wRow.setGravity(Gravity.CENTER_VERTICAL);
         weatherIcon = new ImageView(this);
-        weatherIcon.setImageResource(R.drawable.ic_w_cloud);
-        weatherIcon.setColorFilter(0xFFFFE07A);
+        int curHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        boolean isDay = curHour >= 6 && curHour < 18;
+        weatherIcon.setImageResource(isDay ? R.drawable.ic_w_sun : R.drawable.ic_w_moon);
+        weatherIcon.setColorFilter(isDay ? 0xFFFFD25A : 0xFFDDE4FF);
         wRow.addView(weatherIcon, new LinearLayout.LayoutParams(dp(22), dp(22)));
 
-        weatherTemp = Ui.text(this, "--°", 16, Color.WHITE);
+        weatherTemp = Ui.text(this, "30°", 16, Color.WHITE);
         weatherTemp.setTypeface(Typeface.DEFAULT_BOLD);
         weatherTemp.setPadding(dp(6), 0, dp(6), 0);
         wRow.addView(weatherTemp);
 
-        weatherDesc = Ui.text(this, "Clima", 12, 0xB3FFFFFF);
+        weatherDesc = Ui.text(this, isDay ? "Día despejado" : "Noche despejada", 12, 0xB3FFFFFF);
         wRow.addView(weatherDesc);
         card.addView(wRow);
 
@@ -346,71 +354,109 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         return card;
     }
 
-    // ---------- Contenedor Multimedia (USB y Almacenamiento Local) ----------
+    // ---------- Contenedor Multimedia Equilibrado (USB y Almacenamiento Local) ----------
 
     private View buildMusicCard() {
-        FrameLayout card = new FrameLayout(this);
-        GradientDrawable bg = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
-                Ui.pick(this, new int[]{0xFF24242A, 0xFF18181D},
-                        new int[]{Ui.COLOR_GRAPHITE_CARD, 0xFF101014}));
-        bg.setCornerRadius(dp(18));
-        bg.setStroke(dp(1), 0x24FF6A00);
-        card.setBackground(bg);
-        card.setClipToOutline(true);
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(dp(18), dp(14), dp(18), dp(12));
+        card.setBackground(Ui.card(this));
 
-        art = new ImageView(this);
-        art.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        card.addView(art, new FrameLayout.LayoutParams(-1, -1));
-
-        View shade = new View(this);
-        shade.setBackground(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{0x40000000, 0x1A000000, 0xE6101014}));
-        card.addView(shade, new FrameLayout.LayoutParams(-1, -1));
+        // Fila 1: Cabecera con Chip de Fuente y Badge de Calidad
+        LinearLayout top = new LinearLayout(this);
+        top.setGravity(Gravity.CENTER_VERTICAL);
 
         songSource = Ui.text(this, "USB / MÚSICA LOCAL", 11, Ui.COLOR_AMBER);
         songSource.setTypeface(Typeface.DEFAULT_BOLD);
         songSource.setLetterSpacing(0.12f);
         songSource.setPadding(dp(12), dp(4), dp(12), dp(4));
         GradientDrawable chip = new GradientDrawable();
-        chip.setColor(0x33FF6A00);
+        chip.setColor(0x28FF6A00);
         chip.setCornerRadius(dp(12));
         chip.setStroke(dp(1), 0x4DFF6A00);
         songSource.setBackground(chip);
-        FrameLayout.LayoutParams slp = new FrameLayout.LayoutParams(-2, -2, Gravity.TOP | Gravity.START);
-        slp.setMargins(dp(16), dp(14), 0, 0);
-        card.addView(songSource, slp);
+        top.addView(songSource, new LinearLayout.LayoutParams(-2, -2));
 
-        LinearLayout bottom = new LinearLayout(this);
-        bottom.setOrientation(LinearLayout.HORIZONTAL);
-        bottom.setGravity(Gravity.CENTER_VERTICAL);
-        bottom.setPadding(dp(16), 0, dp(16), dp(14));
+        View spacer = new View(this);
+        top.addView(spacer, new LinearLayout.LayoutParams(0, 1, 1f));
 
-        LinearLayout textLayout = new LinearLayout(this);
-        textLayout.setOrientation(LinearLayout.VERTICAL);
-        songTitle = Ui.text(this, "Música Local / USB", 19, Color.WHITE);
+        TextView audioBadge = Ui.text(this, "HI-FI AUDIO", 10, 0x80FFFFFF);
+        audioBadge.setTypeface(Typeface.DEFAULT_BOLD);
+        audioBadge.setLetterSpacing(0.14f);
+        top.addView(audioBadge);
+        card.addView(top);
+
+        // Fila 2: Carátula / Vinilo + Título, Subtítulo y Barra Decorativa Horizontal
+        LinearLayout mid = new LinearLayout(this);
+        mid.setOrientation(LinearLayout.HORIZONTAL);
+        mid.setGravity(Gravity.CENTER_VERTICAL);
+        mid.setPadding(0, dp(8), 0, dp(6));
+
+        // Carátula elegante en reposo (disco de vinilo oscuro con centro ámbar)
+        FrameLayout artBox = new FrameLayout(this);
+        GradientDrawable artBg = new GradientDrawable();
+        artBg.setColor(0x1A000000);
+        artBg.setCornerRadius(dp(16));
+        artBg.setStroke(dp(1), 0x22FFFFFF);
+        artBox.setBackground(artBg);
+        artBox.setClipToOutline(true);
+
+        art = new ImageView(this);
+        art.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        art.setImageResource(R.drawable.ic_vinyl);
+        art.setAlpha(0.95f);
+        artBox.addView(art, new FrameLayout.LayoutParams(-1, -1));
+        mid.addView(artBox, new LinearLayout.LayoutParams(dp(86), dp(86)));
+
+        LinearLayout trackInfo = new LinearLayout(this);
+        trackInfo.setOrientation(LinearLayout.VERTICAL);
+        trackInfo.setPadding(dp(16), 0, 0, 0);
+
+        songTitle = Ui.text(this, "Música Local / USB", 18, Color.WHITE);
         songTitle.setTypeface(Typeface.DEFAULT_BOLD);
         songTitle.setGravity(Gravity.START);
-        textLayout.addView(songTitle);
+        trackInfo.addView(songTitle);
 
-        songArtist = Ui.text(this, "Toca para abrir la biblioteca", 13, 0xB3FFFFFF);
+        songArtist = Ui.text(this, "Lista para reproducir", 13, 0xB3FFFFFF);
         songArtist.setGravity(Gravity.START);
-        songArtist.setPadding(0, dp(2), 0, 0);
-        textLayout.addView(songArtist);
-        bottom.addView(textLayout, new LinearLayout.LayoutParams(0, -2, 1f));
+        songArtist.setPadding(0, dp(2), 0, dp(8));
+        trackInfo.addView(songArtist);
 
+        // Barra decorativa horizontal sutil que simula ecualizador / progreso
+        FrameLayout progressBar = new FrameLayout(this);
+        GradientDrawable trackD = new GradientDrawable();
+        trackD.setColor(0x22FFFFFF);
+        trackD.setCornerRadius(dp(2));
+        progressBar.setBackground(trackD);
+
+        View progressFill = new View(this);
+        GradientDrawable fillD = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
+                new int[]{Ui.COLOR_AMBER, Ui.COLOR_AMBER_LIGHT});
+        fillD.setCornerRadius(dp(2));
+        progressFill.setBackground(fillD);
+        progressBar.addView(progressFill, new FrameLayout.LayoutParams(dp(120), -1));
+        trackInfo.addView(progressBar, new LinearLayout.LayoutParams(-1, dp(4)));
+
+        mid.addView(trackInfo, new LinearLayout.LayoutParams(0, -2, 1f));
+        card.addView(mid, new LinearLayout.LayoutParams(-1, 0, 1f));
+
+        // Fila 3: Controles multimedia centrados y ergonómicos (Prev, Play/Pause circular 56dp, Next)
         LinearLayout controls = new LinearLayout(this);
-        controls.setGravity(Gravity.CENTER_VERTICAL);
+        controls.setGravity(Gravity.CENTER);
+        controls.setPadding(0, dp(2), 0, dp(2));
+
         controls.addView(Ui.iconButton(this, R.drawable.ic_prev, 46, false, () -> nowPlaying.skip(false)),
                 new LinearLayout.LayoutParams(dp(46), dp(46)));
-        playBtn = Ui.iconButton(this, R.drawable.ic_play, 58, true, () -> nowPlaying.playPause());
-        LinearLayout.LayoutParams plp = new LinearLayout.LayoutParams(dp(58), dp(58));
-        plp.setMargins(dp(12), 0, dp(12), 0);
+
+        playBtn = Ui.iconButton(this, R.drawable.ic_play, 56, true, () -> nowPlaying.playPause());
+        LinearLayout.LayoutParams plp = new LinearLayout.LayoutParams(dp(56), dp(56));
+        plp.setMargins(dp(20), 0, dp(20), 0);
         controls.addView(playBtn, plp);
+
         controls.addView(Ui.iconButton(this, R.drawable.ic_next, 46, false, () -> nowPlaying.skip(true)),
                 new LinearLayout.LayoutParams(dp(46), dp(46)));
-        bottom.addView(controls);
 
-        card.addView(bottom, new FrameLayout.LayoutParams(-1, -2, Gravity.BOTTOM));
+        card.addView(controls);
 
         Ui.pressable(card, 0.98f);
         card.setOnClickListener(v -> nowPlaying.open(this));
@@ -424,7 +470,7 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         boolean empty = t == null || t.title.isEmpty();
         songSource.setText(s == null ? "MÚSICA LOCAL / USB" : nowPlaying.label(s).toUpperCase());
         songTitle.setText(empty ? "Música Local / USB" : t.title);
-        songArtist.setText(empty ? "Toca para abrir la biblioteca" : t.artist);
+        songArtist.setText(empty ? "Lista para reproducir" : t.artist);
         playBtn.setImageResource(t != null && t.playing ? R.drawable.ic_pause : R.drawable.ic_play);
 
         if (t != null && t.art != null) {
@@ -434,11 +480,11 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
             art.setAlpha(1f);
             art.setImageBitmap(t.art);
         } else {
-            art.setPadding(dp(80), dp(56), dp(80), dp(170));
+            art.setPadding(0, 0, 0, 0);
             art.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            art.setImageResource(s == NowPlaying.Source.BT ? R.drawable.ic_bluetooth : R.drawable.ic_music);
-            art.setColorFilter(Color.WHITE);
-            art.setAlpha(0.2f);
+            art.clearColorFilter();
+            art.setAlpha(0.95f);
+            art.setImageResource(R.drawable.ic_vinyl);
         }
     }
 
@@ -452,7 +498,7 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
 
         GradientDrawable dockBg = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
                 new int[]{Ui.COLOR_GRAPHITE_DOCK, 0xFF08080A});
-        dockBg.setStroke(dp(1), 0x20FFFFFF);
+        dockBg.setStroke(dp(1), 0x1AFFFFFF);
         dock.setBackground(dockBg);
 
         // 1. [CarPlay / Zlink]
@@ -470,15 +516,28 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
     }
 
     private View dockItem(int icon, Runnable action) {
-        FrameLayout f = new FrameLayout(this);
+        FrameLayout slot = new FrameLayout(this);
+
+        FrameLayout pill = new FrameLayout(this);
+        GradientDrawable pillBg = new GradientDrawable();
+        pillBg.setColor(0x0DFFFFFF);
+        pillBg.setCornerRadius(dp(22));
+        pillBg.setStroke(dp(1), 0x1AFFFFFF);
+        pill.setBackground(pillBg);
+
         ImageView iv = new ImageView(this);
         iv.setImageResource(icon);
-        iv.setColorFilter(0xE6FFFFFF);
-        iv.setPadding(dp(14), dp(14), dp(14), dp(14));
-        f.addView(iv, new FrameLayout.LayoutParams(dp(56), dp(56), Gravity.CENTER));
-        Ui.pressable(iv, 0.85f);
-        iv.setOnClickListener(v -> action.run());
-        return f;
+        iv.setColorFilter(0xF0FFFFFF);
+        int pad = dp(11);
+        iv.setPadding(pad, pad, pad, pad);
+        pill.addView(iv, new FrameLayout.LayoutParams(-1, -1));
+
+        FrameLayout.LayoutParams plp = new FrameLayout.LayoutParams(dp(54), dp(44), Gravity.CENTER);
+        slot.addView(pill, plp);
+
+        Ui.pressable(pill, 0.90f);
+        pill.setOnClickListener(v -> action.run());
+        return slot;
     }
 
     // ---------- Accesos directos e Intents ----------

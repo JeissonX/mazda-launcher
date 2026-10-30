@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Elegant Dark Vinyl Disc / Cover Vector for Idle Multimedia -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Outer Disc Body -->
+    <path
+        android:fillColor="#14151B"
+        android:strokeColor="#2C303B"
+        android:strokeWidth="1.2"
+        android:pathData="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
+
+    <!-- Concentric Grooves (Micro-texture Sound Tracks) -->
+    <path
+        android:strokeColor="#222530"
+        android:strokeWidth="0.8"
+        android:pathData="M50,8 A42,42 0 1,0 50,92 A42,42 0 1,0 50,8 Z" />
+    <path
+        android:strokeColor="#2A2E3B"
+        android:strokeWidth="0.8"
+        android:pathData="M50,14 A36,36 0 1,0 50,86 A36,36 0 1,0 50,14 Z" />
+    <path
+        android:strokeColor="#222530"
+        android:strokeWidth="0.8"
+        android:pathData="M50,20 A30,30 0 1,0 50,80 A30,30 0 1,0 50,20 Z" />
+    <path
+        android:strokeColor="#2A2E3B"
+        android:strokeWidth="0.8"
+        android:pathData="M50,25 A25,25 0 1,0 50,75 A25,25 0 1,0 50,25 Z" />
+
+    <!-- Vinyl Sheen / Reflection Highlights -->
+    <path
+        android:fillColor="#14FFFFFF"
+        android:pathData="M50,4 L58,4 L52,48 L50,48 Z M50,96 L42,96 L48,52 L50,52 Z" />
+    <path
+        android:fillColor="#10FFFFFF"
+        android:pathData="M4,50 L4,42 L48,48 L48,50 Z M96,50 L96,58 L52,52 L52,50 Z" />
+
+    <!-- Center Label Disc (Mazda Amber) -->
+    <path
+        android:fillColor="#FF6A00"
+        android:strokeColor="#FFA726"
+        android:strokeWidth="1.0"
+        android:pathData="M50,32 A18,18 0 1,0 50,68 A18,18 0 1,0 50,32 Z" />
+
+    <!-- Inner Label Accent Ring -->
+    <path
+        android:strokeColor="#E65100"
+        android:strokeWidth="0.8"
+        android:pathData="M50,38 A12,12 0 1,0 50,62 A12,12 0 1,0 50,38 Z" />
+
+    <!-- Stylized Mazda Wings Motif / Note Symbol -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M44,48 C47,45 50,47 50,49 C50,47 53,45 56,48 C53,49 51,51 50,53 C49,51 47,49 44,48 Z" />
+
+    <!-- Spindle Hole -->
+    <path
+        android:fillColor="#0D0E12"
+        android:strokeColor="#2A2E3B"
+        android:strokeWidth="1.0"
+        android:pathData="M50,46 A4,4 0 1,0 50,54 A4,4 0 1,0 50,46 Z" />
+</vector>

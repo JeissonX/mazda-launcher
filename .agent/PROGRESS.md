@@ -10,23 +10,38 @@ Directivas maestras: Edición quirúrgica, trazabilidad, cero dependencias infla
 - [x] Hito 3: Dock inferior persistente estilo Tesla y tarjeta de estado Mazda 2 DE.
 - [x] Hito 4: Módulo de mantenimiento configurable (ciclo 5.000 km) y tarjetería visual sin TTS.
 - [x] Hito 5: Pipeline de compilación automática en GitHub Actions.
+- [x] Hito 6: Rediseño visual moderno Mazda 2 DE, dock Tesla y tarjetería premium.
 
-## Resolución Autónoma de Incidentes CI/CD (Hito 5 Hotfix)
+## Rediseño Visual Moderno y Refinamiento UI/UX Automotriz (Hito 6)
 
-- **Diagnóstico del Error en CI (Run #40966185210)**:
-  - Causa raíz: `javac` falló en `AppsActivity.java` (líneas 53, 74 y 92) al intentar invocar `MainActivity.pressable(...)`, método que había sido migrado a `Ui.pressable(...)` durante la modularización.
-  - Advertencia de entorno: Advertencia de obsolescencia de runtime de Node en `actions/setup-java@v4`.
+- **Silueta Vectorial Mazda 2 DE (`mazda2.xml` y `mazda2_lights.xml`)**:
+  - Sustitución del vector plano y anguloso por la silueta aerodinámica reconocible del Mazda 2 Hatchback (chasis DE).
+  - Trazo curvo deportivo con caída pronunciada de baúl y alerón/spoiler superior extendido.
+  - Línea de cintura ascendente (kink característico del pilar C) y pasos de rueda abultados con llantas de aleación en estrella de 5 puntas.
+  - En `mazda2_lights.xml`: proyectores rasgados iluminados con haz frontal en degradé cálido ámbar/xenón, pilotos traseros LED rojo rubí y repetidor ámbar en el espejo retrovisor.
 
-- **Corrección Quirúrgica**:
-  - Enrutamiento correcto en `AppsActivity.java` llamando directamente a `Ui.pressable(view, scale)`.
-  - Sobrecargas defensivas `pressable(View v)` añadidas en `Ui.java` y `MainActivity.java` para compatibilidad universal con escala táctil de 0.92f.
-  - Actualización de `.github/workflows/build.yml` a `actions/setup-java@v5` eliminando la advertencia de Node.
+- **Profundidad y Tarjetería Premium (`Ui.java`)**:
+  - Fondos de tarjeta estructurados con degradado grafito de alta fidelidad (`#1C1C24` superior a `#121216` inferior) y esquinas redondeadas a 20dp.
+  - Borde sutil semi-translúcido de 1dp en `0x1FFFFFFF` combinado con micro-resplandor radial ámbar en esquina de acento (`0x14FF6A00`).
+  - Creación del helper `capsuleButton(Context, text, filled, action)` con acolchado generoso (12dp x 24dp), tipografía negrita y micro-relieve táctil a escala 0.94f.
+  - Botones circulares con degradado sutil de ámbar Mazda y trazo de bisel para óptima ergonomía de conducción.
 
-- **Confirmación de Compilación en Verde (Run #40967659964)**:
-  - Commit: `d2eb7d9` (`fix(ci): resolver fallo de compilacion en build.sh y actualizar workflow`).
-  - Estado: `success` en 38s.
-  - Artefacto generado: `MazdaOS-APK` (2.35 MB, `build/MazdaOS.apk`, retención 30 días).
-  - URL de ejecución: `https://github.com/JeissonX/mazda-launcher/actions/runs/40967659964`.
+- **Contenedor Multimedia Equilibrado (`MainActivity.java`)**:
+  - Eliminación total del vacío negro en reposo: nueva carátula por defecto de disco de vinilo estilizado (`ic_vinyl.xml`) con surcos concéntricos y galleta central en ámbar Mazda.
+  - Reorganización espacial: contenedor de carátula de 86dp x 86dp con marco redondeado, título "Música Local / USB", subtítulo "Lista para reproducir" y barra decorativa horizontal simulando nivel de ecualizador / progreso.
+  - Controles multimedia centrados y amplios: botón circular central Play/Pause en ámbar de 56dp flanqueado por botones Prev y Next de 46dp.
+
+- **Tarjeta CarPlay / Enlace Telefónico (`MainActivity.java`)**:
+  - Rediseño con fondo en degradado grafito con tinte azul profundo (`#181F2C` a `#0E1118`) y micro-glow radial cyan/azul.
+  - Sustitución del botón de línea plana por una cápsula táctil sólida y prominente "CONECTAR AHORA" en ámbar Mazda.
+
+- **Dock Inferior Estilo Tesla (`MainActivity.java`)**:
+  - Encapsulación de cada uno de los 5 accesos directos dentro de una píldora táctil individual de 54dp x 44dp con radio de 22dp, fondo traslúcido `0x0DFFFFFF` y borde sutil `0x1AFFFFFF`.
+  - Dispersión armónica sobre barra flotante grafito con respuesta háptica y micro-animación de escala 0.90f al tacto.
+
+- **Condición Climática y Solar (`Weather.java` y `MainActivity.java`)**:
+  - Ventana solar diurna de 06:00 a 18:00 horas sincronizada: icono solar (`ic_w_sun`) con tinte dorado cálido (`#FFFFD25A`) y estado textual "Día despejado".
+  - Clima térmico base por defecto realista para Barrancabermeja (~30°C) con carga instantánea sin estados vacíos de `--°`.
 
 ## Cierre de Fase e Integración Continua (CI/CD)
 
@@ -37,23 +52,11 @@ Directivas maestras: Edición quirúrgica, trazabilidad, cero dependencias infla
   - Firma de depuración lista para instalación directa en hardware automotriz Revo (4GB/64GB, Android 7.1 NWD).
   - Trazabilidad total de la base de código libre de bloatware, con 24 clases limpias bajo `com.mazda2.launcher`.
 
-## Resumen de Cambios Recientes (Hito 5)
+## Resumen de Cambios Anteriores (Hitos 1 a 5)
 
-- **Auditoría y Endurecimiento de `build.sh`**:
-  - Salida de APK normalizada a `MazdaOS.apk` (y `MazdaOS-compartir.apk` para variante de distribución limpia).
-  - Verificación de rutas de entrada y compilación limpia de las 24 clases activas bajo el paquete `com.mazda2.launcher` sin referencias a módulos obsoletos (FM, TextToSpeech).
-  - Compatibilidad de build tools configurada por defecto a `build-tools;33.0.2` alineada con la plataforma `android-33` y retrocompatible con `minSdkVersion 25` (Android 7.1 Revo / NWD).
-  - Firma automática de depuración garantizada mediante generación desatendida de `debug.keystore` (RSA 2048-bit, validez 10.000 días) y firma dual v1/v2/v3 con `zipalign` y `apksigner` para instalación directa sin restricciones en la unidad central.
-
-- **Pipeline de CI en GitHub Actions (`.github/workflows/build.yml`)**:
-  - Ejecución en runner `ubuntu-latest` ante eventos `push` a la rama `main` y ejecución manual desatendida mediante `workflow_dispatch`.
-  - Configuración de JDK 17 headless (`actions/setup-java@v5`, distribución `temurin`).
-  - Provisión de herramientas Android SDK oficiales (`android-actions/setup-android@v3`): `cmdline-tools;latest`, `platform-tools`, `platforms;android-33` y `build-tools;33.0.2`.
-  - Ejecución del script de empaquetado: `chmod +x build.sh && ./build.sh` con variable de entorno `BUILD_TOOLS: "33.0.2"`.
-  - Publicación del artefacto compilado (`actions/upload-artifact@v4`) con identificador `MazdaOS-APK`, ruta `build/MazdaOS.apk`, retención garantizada de 30 días y control de error estricto si el binario no es generado (`if-no-files-found: error`).
-
-## Resumen de Cambios Anteriores (Hitos 1 a 4)
-
+- **Hito 5 (Pipeline CI/CD y Hotfix de Compilación)**:
+  - Generación de `MazdaOS.apk` con firma debug y zipalign automático.
+  - Corrección de llamadas táctiles estáticas hacia `Ui.pressable(...)` y actualización del runner de GitHub Actions a JDK 17 setup-java@v5.
 - **Hito 4 (Mantenimiento 5.000 km, Pastillas Visuales y Toggle Pico y Placa)**:
   - Purga total de `TextToSpeech` y `MediaPlayer` en `GreeterService.java`, y eliminación de `Speech.java`.
   - Tarjetería visual informativa con saludo contextual dinámico según la hora y estado del vehículo en tiempo real ("● Todo en orden" / aviso de mantenimiento).
@@ -61,11 +64,6 @@ Directivas maestras: Edición quirúrgica, trazabilidad, cero dependencias infla
   - Toggle booleano `pico_placa_enabled` en `Profile.java` desactivado por defecto (Barrancabermeja), suprimiendo cómputo y contenedores en pantalla principal.
 - **Hito 3 (Dock Tesla & Tarjeta Mazda 2 DE)**:
   - Dock inferior persistente de 64dp de altura con 5 accesos directos: CarPlay/Zlink, Música local/USB, Cajón de aplicaciones, Ecualizador Hi-Fi y Pantalla apagada.
-  - Tarjeta lateral izquierda (~35%) con silueta vectorial del Mazda 2 Hatchback DE (`mazda2.xml` y `mazda2_lights.xml`), velocímetro digital centralizado con interpolación suave a 60 FPS y telltale de luces conmutado por señal ILL.
-  - Contenedor multimedia dedicado para USB y tarjeta de conexión rápida para CarPlay.
-  - Paleta ámbar (#FF6A00 / #E65100) y gris grafito profundo (#121212 / #1E1E1E) en `colors.xml` y `Ui.java`.
+  - Tarjeta lateral izquierda (~35%) con silueta vectorial del Mazda 2 Hatchback DE, velocímetro digital centralizado con interpolación suave a 60 FPS y telltale de luces conmutado por señal ILL.
 - **Hitos 1 y 2 (Base Limpia y Purga FM)**:
-  - Desvinculación de repositorios de referencia `.ref_cleanlauncher` y `.ref_tlauncher`.
-  - Independización de Git, paquete configurado en `com.mazda2.launcher` y nombre visible "Mazda OS".
-  - Purga total de radio FM analógica (`RadioActivity`, `RadioClient`, `DialView`, polling MCU de 1000ms y conexión Binder a `com.nwd.radio.service`).
-  - Prioridad de reproducción fijada a USB / medios locales y ecualización Hi-Fi predeterminada.
+  - Desvinculación de repositorios de referencia y purga de radio analógica FM.

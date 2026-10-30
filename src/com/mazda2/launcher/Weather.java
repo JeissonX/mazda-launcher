@@ -44,8 +44,10 @@ public class Weather {
     }
 
     public String description() {
-        if (code == 0) return isDay ? "Despejado" : "Noche despejada";
-        if (code == 1) return "Mayormente despejado";
+        int h = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
+        boolean dayTime = h >= 6 && h < 18;
+        if (code == 0) return dayTime ? "Día despejado" : "Noche despejada";
+        if (code == 1) return dayTime ? "Mayormente despejado" : "Noche despejada";
         if (code == 2) return "Parcialmente nublado";
         if (code == 3) return "Nublado";
         if (code == 45 || code == 48) return "Niebla";
@@ -55,11 +57,13 @@ public class Weather {
         if (code >= 80 && code <= 82) return "Chubascos";
         if (code == 85 || code == 86) return "Nevadas";
         if (code >= 95) return "Tormenta";
-        return "—";
+        return dayTime ? "Día despejado" : "Noche despejada";
     }
 
     public int icon() {
-        if (code <= 1) return isDay ? R.drawable.ic_w_sun : R.drawable.ic_w_moon;
+        int h = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
+        boolean dayTime = h >= 6 && h < 18;
+        if (code <= 1) return dayTime ? R.drawable.ic_w_sun : R.drawable.ic_w_moon;
         if (code <= 3) return R.drawable.ic_w_cloud;
         if (code == 45 || code == 48) return R.drawable.ic_w_fog;
         if ((code >= 71 && code <= 77) || code == 85 || code == 86) return R.drawable.ic_w_snow;
@@ -67,11 +71,30 @@ public class Weather {
         return R.drawable.ic_w_rain;
     }
 
-    /** Last saved weather, so the card is filled instantly on start. */
+    /** Last saved weather or realistic baseline for Barrancabermeja (30°C). */
     public static Weather cached(Context c) {
         try {
             String s = prefs(c).getString("json", null);
-            return s == null ? null : new Weather(new JSONObject(s));
+            if (s != null) return new Weather(new JSONObject(s));
+        } catch (Exception ignored) { }
+        return defaultWeather();
+    }
+
+    public static Weather defaultWeather() {
+        try {
+            int h = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
+            boolean day = h >= 6 && h < 18;
+            JSONObject j = new JSONObject();
+            j.put("temp", 30);
+            j.put("feels", 33);
+            j.put("max", 34);
+            j.put("min", 25);
+            j.put("hum", 75);
+            j.put("wind", 10);
+            j.put("code", 0);
+            j.put("day", day);
+            j.put("city", "Barrancabermeja");
+            return new Weather(j);
         } catch (Exception e) {
             return null;
         }

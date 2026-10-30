@@ -87,13 +87,23 @@ final class Ui {
         return new LayerDrawable(new Drawable[]{base, glow});
     }
 
-    static GradientDrawable card(Context c) {
-        boolean dark = isDark(c);
-        GradientDrawable bg = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                dark ? new int[]{COLOR_GRAPHITE_CARD, 0xFF121216} : new int[]{0xFF24242A, 0xFF1C1C20});
-        bg.setCornerRadius(dp(c, 18));
-        bg.setStroke(dp(c, 1), dark ? 0x26FF6A00 : 0x33FF6A00);
-        return bg;
+    static Drawable card(Context c) {
+        float r = dp(c, 20);
+        // Base gradient: refined dark graphite #1C1C24 to #121216
+        GradientDrawable base = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[]{0xFF1C1C24, 0xFF121216});
+        base.setCornerRadius(r);
+        base.setStroke(dp(c, 1), 0x1FFFFFFF);
+
+        // Micro-glow: subtle radial amber glow at the upper accent corner
+        GradientDrawable glow = new GradientDrawable();
+        glow.setCornerRadius(r);
+        glow.setGradientType(GradientDrawable.RADIAL_GRADIENT);
+        glow.setGradientRadius(dp(c, 360));
+        glow.setGradientCenter(0.85f, 0.12f);
+        glow.setColors(new int[]{0x14FF6A00, 0x00FF6A00});
+
+        return new LayerDrawable(new Drawable[]{base, glow});
     }
 
     static GradientDrawable circle(int color) {
@@ -101,6 +111,28 @@ final class Ui {
         d.setShape(GradientDrawable.OVAL);
         d.setColor(color);
         return d;
+    }
+
+    /** Tactile capsule button with micro-relief padding (12dp x 24dp) and bold typography. */
+    static TextView capsuleButton(Context c, CharSequence text, boolean filled, Runnable action) {
+        TextView b = new TextView(c);
+        b.setText(text);
+        b.setTextSize(12);
+        b.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        b.setLetterSpacing(0.08f);
+        b.setGravity(Gravity.CENTER);
+        b.setPadding(dp(c, 24), dp(c, 12), dp(c, 24), dp(c, 12));
+
+        GradientDrawable bg = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                filled ? new int[]{COLOR_AMBER, COLOR_AMBER_DEEP}
+                       : new int[]{0x28FFFFFF, 0x14FFFFFF});
+        bg.setCornerRadius(dp(c, 24));
+        bg.setStroke(dp(c, 1), filled ? 0x4DFFFFFF : 0x2EFFFFFF);
+        b.setBackground(bg);
+        b.setTextColor(filled ? COLOR_GRAPHITE_BG : Color.WHITE);
+        pressable(b, 0.94f);
+        if (action != null) b.setOnClickListener(v -> action.run());
+        return b;
     }
 
     static TextView text(Context c, CharSequence s, float sp, int color) {
@@ -114,14 +146,27 @@ final class Ui {
         return tv;
     }
 
-    /** Round icon button. filled = amber disc with dark icon (primary action). */
+    /** Tactile round icon button. filled = amber disc with dark icon (primary action). */
     static ImageView iconButton(Context c, int icon, int sizeDp, boolean filled, Runnable action) {
         ImageView b = new ImageView(c);
         b.setImageResource(icon);
         int pad = Math.round(sizeDp * 0.24f);
         b.setPadding(dp(c, pad), dp(c, pad), dp(c, pad), dp(c, pad));
-        b.setBackground(circle(filled ? COLOR_AMBER : 0x26FFFFFF));
-        b.setColorFilter(filled ? COLOR_GRAPHITE_BG : Color.WHITE);
+        if (filled) {
+            GradientDrawable disc = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                    new int[]{COLOR_AMBER, COLOR_AMBER_DEEP});
+            disc.setShape(GradientDrawable.OVAL);
+            disc.setStroke(dp(c, 1), 0x4DFFFFFF);
+            b.setBackground(disc);
+            b.setColorFilter(COLOR_GRAPHITE_BG);
+        } else {
+            GradientDrawable disc = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                    new int[]{0x26FFFFFF, 0x12FFFFFF});
+            disc.setShape(GradientDrawable.OVAL);
+            disc.setStroke(dp(c, 1), 0x24FFFFFF);
+            b.setBackground(disc);
+            b.setColorFilter(Color.WHITE);
+        }
         pressable(b, 0.88f);
         b.setOnClickListener(v -> action.run());
         return b;

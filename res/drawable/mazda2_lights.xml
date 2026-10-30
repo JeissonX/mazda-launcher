@@ -8,86 +8,122 @@
 
     <!-- Ground Contact Shadow -->
     <path
-        android:fillColor="#50000000"
-        android:pathData="M25,92 A105,4.5 0 1,0 235,92 A105,4.5 0 1,0 25,92 Z" />
+        android:fillColor="#4D000000"
+        android:pathData="M18,92 C18,88.5 242,88.5 242,92 C242,95.5 18,95.5 18,92 Z" />
 
-    <!-- Forward Headlight Beam Cone Glow -->
+    <!-- Forward Headlight Beam Projector Glow (Warm Amber & Xenon White Gradient Effect) -->
+    <!-- Outer Soft Glow Cone -->
     <path
-        android:fillColor="#22FFB300"
-        android:pathData="M20,54 L0,38 L0,74 Z" />
+        android:fillColor="#1CFFB300"
+        android:pathData="M18,54 L0,26 L0,84 Z" />
+    <!-- Mid Intensity Warm Beam -->
     <path
-        android:fillColor="#44FFE082"
-        android:pathData="M20,54 L2,44 L2,66 Z" />
+        android:fillColor="#38FFE082"
+        android:pathData="M18,54 L0,36 L0,74 Z" />
+    <!-- Bright Projector Core Beam -->
+    <path
+        android:fillColor="#66FFF9C4"
+        android:pathData="M18,54 L0,46 L0,64 Z" />
 
-    <!-- Main Body Chassis (Mazda 2 DE Flowing Silhouette) -->
+    <!-- Main Body Chassis: Zoom-Zoom Aerodynamic Wedge Silhouette in Night Tones -->
     <path
-        android:fillColor="#B8BDC7"
-        android:pathData="M14,66 L12,58 Q14,52 24,50 L48,46 L82,36 Q94,26 120,18 L180,19 Q194,19 204,21 L206,23 L196,24 Q210,34 224,46 Q238,50 244,56 Q248,62 246,68 L240,74 L232,74 A20,20 0 0,0 192,74 L84,74 A20,20 0 0,0 44,74 L22,74 Q14,74 14,66 Z" />
+        android:fillColor="#B2B9C6"
+        android:pathData="M12,60 C11,54 20,49 38,48 C56,47 70,41 78,38 C90,26 104,18 118,18 C142,18 166,19 184,19 C192,19 200,20 204,22 L196,25 C206,32 216,39 224,44 C234,48 242,52 246,58 C248,62 246,68 238,72 L227,72 A19,19 0 0,0 189,72 L81,72 A19,19 0 0,0 43,72 L22,72 C15,72 12,68 12,60 Z" />
 
-    <!-- Lower Aerodynamic Trim & Sill -->
+    <!-- Lower Rocker Sill & Aerodynamic Diffuser Accent -->
     <path
-        android:fillColor="#8A92A0"
-        android:pathData="M14,66 L44,66 L44,74 L22,74 Q14,74 14,66 Z M84,68 L192,68 L192,74 L84,74 Z M232,68 L246,68 L240,74 L232,74 Z" />
+        android:fillColor="#7D8696"
+        android:pathData="M22,70 L43,70 L43,72 L22,72 Z M81,70 L189,70 L189,72 L81,72 Z M227,70 L238,70 C242,67 244,63 244,60 L242,60 C241,65 237,68 227,70 Z" />
 
-    <!-- Tinted Windows (DE Greenhouse with C-Pillar Kick) -->
+    <!-- Muscular Wheel Arch Creases (Front & Rear Flares) -->
     <path
-        android:fillColor="#141824"
-        android:pathData="M84,37 L118,22 L140,22 L140,42 L84,42 Z" />
-    <path
-        android:fillColor="#141824"
-        android:pathData="M144,22 L178,23 Q188,27 194,36 L194,42 L144,42 Z" />
+        android:strokeColor="#8D97A8"
+        android:strokeWidth="1.2"
+        android:pathData="M34,68 C34,54 46,47 62,47 C78,47 90,54 90,68 M180,68 C180,54 192,47 208,47 C224,47 236,54 236,68" />
 
-    <!-- Illuminated Headlight Cluster (Active Glow) -->
+    <!-- Mazda 2 DE Dynamic Ascending Waist / Swage Line -->
+    <path
+        android:strokeColor="#7E889A"
+        android:strokeWidth="1.2"
+        android:pathData="M42,51 C68,49 104,53 144,52 C180,51 208,48 224,47" />
+
+    <!-- Greenhouse Windows (Mazda 2 DE Signature Sweeping Beltline & C-Pillar Kink) -->
+    <!-- Front Window -->
+    <path
+        android:fillColor="#0D101A"
+        android:pathData="M81,39 C93,27 105,22 124,22 L135,22 L135,43 L81,43 Z" />
+    <!-- Rear Window with Triangular Kink -->
+    <path
+        android:fillColor="#0D101A"
+        android:pathData="M139,22 L172,22 C181,25 188,32 192,39 L192,42 L139,43 Z" />
+
+    <!-- Active Illuminated Headlight Cluster (Warm White / Amber Halogen & Xenon) -->
     <path
         android:fillColor="#FFFFD54F"
-        android:pathData="M16,52 L38,47 L34,55 L14,57 Z" />
+        android:pathData="M14,56 C17,51 27,48 40,48 C38,55 30,59 23,59 Z" />
     <path
         android:fillColor="#FFFFFFFF"
-        android:pathData="M16,53 L24,51 L23,55 L15,56 Z" />
+        android:pathData="M16,55 C19,53 25,51 32,51 C30,55 25,57 20,57 Z" />
     <path
         android:fillColor="#FFFF9100"
-        android:pathData="M34,48 L38,47 L37,51 L33,52 Z" />
+        android:pathData="M34,48 C37,48 40,48 40,48 C39,52 38,54 35,55 Z" />
 
-    <!-- Illuminated Rear LED Taillight (Active Glow) -->
+    <!-- Active Illuminated Rear LED Taillight (Vivid Ruby Red Glow) -->
     <path
         android:fillColor="#FFFF1744"
-        android:pathData="M234,50 L248,54 L247,65 L233,62 Z" />
+        android:pathData="M221,45 C232,47 241,50 244,54 C243,61 235,61 227,58 Z" />
     <path
         android:fillColor="#FFFF8A80"
-        android:pathData="M241,54 L247,56 L246,62 L240,60 Z" />
+        android:pathData="M233,50 C238,51 242,53 242,55 C241,58 236,58 233,55 Z" />
 
-    <!-- Body Contour Lines & Door Cuts -->
+    <!-- Aerodynamic Side Mirror with Active Amber Turn Repeater -->
     <path
-        android:strokeColor="#747D8C"
-        android:strokeWidth="1.2"
-        android:pathData="M142,22 L142,66 M108,48 L118,48 M162,48 L172,48 M44,52 Q70,48 100,54 Q150,56 234,54" />
-
-    <!-- Side Mirror with Illuminated Turn Signal -->
-    <path
-        android:fillColor="#AAB0BD"
-        android:pathData="M82,39 L92,39 Q94,43 90,44 L82,43 Z" />
+        android:fillColor="#9AA2B2"
+        android:pathData="M78,41 L88,41 C90,44 88,46 84,46 L78,44 Z" />
     <path
         android:fillColor="#FFFF9100"
-        android:pathData="M87,41 L92,41 Q93,43 90,43 L87,43 Z" />
+        android:pathData="M82,43 L88,43 C89,45 87,46 84,46 L82,45 Z" />
 
-    <!-- Wheels (Front & Rear) -->
+    <!-- Door Cut Lines & Handle -->
     <path
-        android:fillColor="#121316"
-        android:pathData="M48,74 A16,16 0 1,0 80,74 A16,16 0 1,0 48,74 Z" />
-    <path
-        android:fillColor="#B4BAC6"
-        android:pathData="M53,74 A11,11 0 1,0 75,74 A11,11 0 1,0 53,74 Z" />
-    <path
-        android:fillColor="#22252C"
-        android:pathData="M60,74 A4,4 0 1,0 68,74 A4,4 0 1,0 60,74 Z" />
+        android:strokeColor="#747E8E"
+        android:strokeWidth="1.0"
+        android:pathData="M137,22 L137,68 M102,48 L114,48 M164,48 L176,48" />
 
+    <!-- Wheels (Front: x=62, Rear: x=208, Ground at y=74) -->
+    <!-- Front Wheel -->
     <path
-        android:fillColor="#121316"
-        android:pathData="M196,74 A16,16 0 1,0 228,74 A16,16 0 1,0 196,74 Z" />
+        android:fillColor="#111215"
+        android:pathData="M62,58 A16,16 0 1,0 62,90 A16,16 0 1,0 62,58 Z" />
     <path
-        android:fillColor="#B4BAC6"
-        android:pathData="M201,74 A11,11 0 1,0 223,74 A11,11 0 1,0 201,74 Z" />
+        android:fillColor="#9AA2B2"
+        android:pathData="M62,62 A12,12 0 1,0 62,86 A12,12 0 1,0 62,62 Z" />
     <path
-        android:fillColor="#22252C"
-        android:pathData="M208,74 A4,4 0 1,0 216,74 A4,4 0 1,0 208,74 Z" />
+        android:fillColor="#1C2029"
+        android:pathData="M62,65 A9,9 0 1,0 62,83 A9,9 0 1,0 62,65 Z" />
+    <!-- 5-Spoke Highlights -->
+    <path
+        android:fillColor="#B8C0CE"
+        android:pathData="M61,65 L63,65 L63,83 L61,83 Z M53,70 L55,69 L69,78 L67,79 Z M54,78 L56,79 L69,70 L68,69 Z" />
+    <path
+        android:fillColor="#FF6A00"
+        android:pathData="M62,72 A2,2 0 1,0 62,76 A2,2 0 1,0 62,72 Z" />
+
+    <!-- Rear Wheel -->
+    <path
+        android:fillColor="#111215"
+        android:pathData="M208,58 A16,16 0 1,0 208,90 A16,16 0 1,0 208,58 Z" />
+    <path
+        android:fillColor="#9AA2B2"
+        android:pathData="M208,62 A12,12 0 1,0 208,86 A12,12 0 1,0 208,62 Z" />
+    <path
+        android:fillColor="#1C2029"
+        android:pathData="M208,65 A9,9 0 1,0 208,83 A9,9 0 1,0 208,65 Z" />
+    <!-- 5-Spoke Highlights -->
+    <path
+        android:fillColor="#B8C0CE"
+        android:pathData="M207,65 L209,65 L209,83 L207,83 Z M199,70 L201,69 L215,78 L213,79 Z M200,78 L202,79 L215,70 L214,69 Z" />
+    <path
+        android:fillColor="#FF6A00"
+        android:pathData="M208,72 A2,2 0 1,0 208,76 A2,2 0 1,0 208,72 Z" />
 </vector>

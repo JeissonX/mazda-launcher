@@ -43,6 +43,12 @@ Directivas maestras: Edición quirúrgica, trazabilidad, cero dependencias infla
   - Ventana solar diurna de 06:00 a 18:00 horas sincronizada: icono solar (`ic_w_sun`) con tinte dorado cálido (`#FFFFD25A`) y estado textual "Día despejado".
   - Clima térmico base por defecto realista para Barrancabermeja (~30°C) con carga instantánea sin estados vacíos de `--°`.
 
+- **Confirmación de Compilación en Verde en GitHub Actions (Run #41060170149)**:
+  - Commit: `dde2cde` (`fix(ui): centralizar background de carPlayCard e importar drawables en MainActivity`).
+  - Estado: `success` en 42s.
+  - Artefacto generado: `MazdaOS-APK` (2.36 MB, `build/MazdaOS.apk`, retención 30 días).
+  - URL de ejecución: `https://github.com/JeissonX/mazda-launcher/actions/runs/41060170149`.
+
 ## Cierre de Fase e Integración Continua (CI/CD)
 
 - **Artefacto Compilado**: `build/MazdaOS.apk` (identificador en GitHub Actions: `MazdaOS-APK`).

@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -224,21 +226,7 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         LinearLayout card = new LinearLayout(this);
         card.setOrientation(LinearLayout.VERTICAL);
         card.setPadding(dp(18), dp(14), dp(18), dp(14));
-
-        float r = dp(20);
-        GradientDrawable base = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
-                new int[]{0xFF181F2C, 0xFF12151E, 0xFF0E1118});
-        base.setCornerRadius(r);
-        base.setStroke(dp(1), 0x264A6A94);
-
-        GradientDrawable glow = new GradientDrawable();
-        glow.setCornerRadius(r);
-        glow.setGradientType(GradientDrawable.RADIAL_GRADIENT);
-        glow.setGradientRadius(dp(360));
-        glow.setGradientCenter(0.9f, 0.1f);
-        glow.setColors(new int[]{0x223B82F6, 0x003B82F6});
-
-        card.setBackground(new LayerDrawable(new Drawable[]{base, glow}));
+        card.setBackground(Ui.carPlayCard(this));
 
         LinearLayout top = new LinearLayout(this);
         top.setGravity(Gravity.CENTER_VERTICAL);

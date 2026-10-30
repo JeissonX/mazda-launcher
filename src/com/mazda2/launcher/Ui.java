@@ -106,6 +106,23 @@ final class Ui {
         return new LayerDrawable(new Drawable[]{base, glow});
     }
 
+    static Drawable carPlayCard(Context c) {
+        float r = dp(c, 20);
+        GradientDrawable base = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
+                new int[]{0xFF181F2C, 0xFF12151E, 0xFF0E1118});
+        base.setCornerRadius(r);
+        base.setStroke(dp(c, 1), 0x264A6A94);
+
+        GradientDrawable glow = new GradientDrawable();
+        glow.setCornerRadius(r);
+        glow.setGradientType(GradientDrawable.RADIAL_GRADIENT);
+        glow.setGradientRadius(dp(c, 360));
+        glow.setGradientCenter(0.9f, 0.1f);
+        glow.setColors(new int[]{0x223B82F6, 0x003B82F6});
+
+        return new LayerDrawable(new Drawable[]{base, glow});
+    }
+
     static GradientDrawable circle(int color) {
         GradientDrawable d = new GradientDrawable();
         d.setShape(GradientDrawable.OVAL);

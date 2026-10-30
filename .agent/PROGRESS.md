@@ -11,6 +11,37 @@ Directivas maestras: Edición quirúrgica, trazabilidad, cero dependencias infla
 - [x] Hito 4: Módulo de mantenimiento configurable (ciclo 5.000 km) y tarjetería visual sin TTS.
 - [x] Hito 5: Pipeline de compilación automática en GitHub Actions.
 - [x] Hito 6: Rediseño visual moderno Mazda 2 DE, dock Tesla y tarjetería premium.
+- [x] Hito 7: Adopción de foto real car_mazda2.png y colorimetría Tesla / CarPlay (Cyber Blue & Tesla Red).
+
+## Adopción de Foto Real y Colorimetría Cyber Blue & Tesla Red (Hito 7)
+
+- **Foto Real Mazda 2 DE (`car_mazda2.png`)**:
+  - Sustitución de los vectores sintéticos obsoletos (`mazda2.xml` y `mazda2_lights.xml` eliminados de la base de código).
+  - Carga predeterminada del activo de alta definición `car_mazda2.png` en `res/drawable-nodpi/` con proporción natural, `ScaleType.FIT_CENTER` y `setAdjustViewBounds(true)`.
+  - Integración armónica de la sombra de piso original sobre la tarjetería grafito; desacoplamiento de animaciones de faros en la imagen estática preservando el telltale de tablero `ic_lights` conmutado por la línea ILL.
+  - Adaptación de `Profile.bundledCar` y `build.sh` para soportar la imagen rasterizada.
+
+- **Reestructuración de Colorimetría (Tesla OS & CarPlay)**:
+  - **Paleta de Acento**: Transición integral de ámbar/naranja hacia **Cyber Blue** (`#0084FF`), **Ice Glow Neon** (`#00E5FF`) y **Tesla Red** (`#E82127`).
+  - **Superficies y Fondos**: Fondos estructurados en Deep Carbon (`#0D0E12`), Slate Dark (`#15161C`) y tarjetas Steel Gray (`#181920`) con trazo translúcido azulado (`0x220084FF`) y micro-glow radial atenuado Ice Blue (`0x1200E5FF`).
+  - **Tarjeta de Vehículo y Velocímetro**:
+    - Dígito numérico del velocímetro digital en blanco nítido automotriz `#F5F5F7`.
+    - Etiqueta "KM/H" en contraste discreto `0x99A0AEC0`.
+    - Pastilla de aceite en azul CarPlay translúcido (`0x260084FF`) y texto `#00AAFF`, conmutando a Tesla Red (`#E82127`) con fondo sólido (`0xCCE82127`) únicamente ante condición de alerta o proximidad de cambio (< 200 km).
+  - **Contenedor Multimedia y Reproductor**:
+    - Disco de vinilo `ic_vinyl.xml` con galleta central y acentos en Cyber Blue e Ice Blue.
+    - Chip de fuente USB / Local en tinte azul (`0x220084FF`) con texto Cyber Blue.
+    - Barra de ecualizador / progreso con degradado horizontal de Cyber Blue (`#0084FF`) a Ice Glow (`#00E5FF`).
+    - Botón central Play/Pause circular en Cyber Blue con icono blanco y micro-relieve táctil.
+  - **Tarjeta CarPlay**:
+    - Botón "CONECTAR AHORA" en cápsula táctil con degradado Cyber Blue y tipografía blanca nítida.
+    - Tinte de icono y distintivo en azul CarPlay.
+  - **Dock Inferior Tesla**:
+    - Píldoras táctiles ergonómicas con fondo translúcido Cyber Blue `0x0F0084FF` y borde sutil `0x220084FF`.
+  - **Módulo de Mantenimiento (`OilActivity.java`)**:
+    - Reemplazo de tonos naranja por Cyber Blue e Ice Glow para cabeceras y botón "Registrar cambio de aceite hoy".
+    - Chips de intervalo de kilometraje activos en Cyber Blue con contorno Ice Glow.
+    - Barra de progreso y estado en Cyber Blue para condición óptima, conmutando a Tesla Red (`#E82127`) cuando el kilometraje restante es crítico o está vencido.
 
 ## Rediseño Visual Moderno y Refinamiento UI/UX Automotriz (Hito 6)
 

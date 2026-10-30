@@ -18,14 +18,26 @@ import android.widget.Toast;
 /** Shared look (Mazda Amber & Deep Graphite) and small helpers for all screens. */
 final class Ui {
 
-    // Mazda 2 Instrument Cluster Colors
-    static final int COLOR_AMBER = 0xFFFF6A00;
-    static final int COLOR_AMBER_DEEP = 0xFFE65100;
-    static final int COLOR_AMBER_LIGHT = 0xFFFFA726;
-    static final int COLOR_GRAPHITE_BG = 0xFF121212;
-    static final int COLOR_GRAPHITE_SURFACE = 0xFF1E1E1E;
-    static final int COLOR_GRAPHITE_CARD = 0xFF16161A;
-    static final int COLOR_GRAPHITE_DOCK = 0xFF0D0D11;
+    // Tesla / CarPlay Cyber Blue, Slate Dark & Tesla Red Colorimetry
+    static final int COLOR_ACCENT_BLUE = 0xFF0084FF;       // Cyber Blue / CarPlay Blue
+    static final int COLOR_ACCENT_BLUE_LIGHT = 0xFF00AAFF; // Cyber Blue Light
+    static final int COLOR_GLOW_ICE = 0xFF00E5FF;          // Ice Blue Neon
+    static final int COLOR_ALERT_RED = 0xFFE82127;         // Tesla Red
+    static final int COLOR_ALERT_RED_DARK = 0xFFB71C1C;    // Dark Crimson Red
+
+    static final int COLOR_BG_DARK = 0xFF0D0E12;          // Deep Carbon
+    static final int COLOR_SURFACE = 0xFF15161C;          // Slate Dark
+    static final int COLOR_CARD = 0xFF181920;             // Graphite / Steel Gray
+    static final int COLOR_DOCK = 0xFF0A0B0E;             // Deep Slate Dock
+
+    // Compatibility aliases for existing references
+    static final int COLOR_AMBER = COLOR_ACCENT_BLUE;
+    static final int COLOR_AMBER_DEEP = 0xFF0066CC;
+    static final int COLOR_AMBER_LIGHT = COLOR_ACCENT_BLUE_LIGHT;
+    static final int COLOR_GRAPHITE_BG = COLOR_BG_DARK;
+    static final int COLOR_GRAPHITE_SURFACE = COLOR_SURFACE;
+    static final int COLOR_GRAPHITE_CARD = COLOR_CARD;
+    static final int COLOR_GRAPHITE_DOCK = COLOR_DOCK;
 
     // MCU source ids for ACTION_REQUEST_CHANGE_SOURCE: the "Source" column of
     // /nwdappconfig/app/ApplicationList.xml (not the AppID).
@@ -69,39 +81,39 @@ final class Ui {
     static Drawable background(Context c) {
         if (isDark(c)) {
             GradientDrawable base = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
-                    new int[]{COLOR_GRAPHITE_BG, 0xFF0A0A0E, 0xFF000000});
+                    new int[]{COLOR_BG_DARK, COLOR_SURFACE, 0xFF08090C});
             GradientDrawable glow = new GradientDrawable();
             glow.setGradientType(GradientDrawable.RADIAL_GRADIENT);
-            glow.setGradientRadius(dp(c, 560));
+            glow.setGradientRadius(dp(c, 580));
             glow.setGradientCenter(0.95f, 0.95f);
-            glow.setColors(new int[]{0x1AFF6A00, 0x00FF6A00});
+            glow.setColors(new int[]{0x1200E5FF, 0x0000E5FF}); // Resplandor Ice Blue radial atenuado
             return new LayerDrawable(new Drawable[]{base, glow});
         }
         GradientDrawable base = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
-                new int[]{0xFF1E1E22, 0xFF16161A, 0xFF101014});
+                new int[]{0xFF1C1E26, COLOR_SURFACE, COLOR_BG_DARK});
         GradientDrawable glow = new GradientDrawable();
         glow.setGradientType(GradientDrawable.RADIAL_GRADIENT);
-        glow.setGradientRadius(dp(c, 560));
+        glow.setGradientRadius(dp(c, 580));
         glow.setGradientCenter(0.15f, 0.1f);
-        glow.setColors(new int[]{0x22FF6A00, 0x00FF6A00});
+        glow.setColors(new int[]{0x160084FF, 0x000084FF});
         return new LayerDrawable(new Drawable[]{base, glow});
     }
 
     static Drawable card(Context c) {
         float r = dp(c, 20);
-        // Base gradient: refined dark graphite #1C1C24 to #121216
+        // Base gradient: Graphite / Steel Gray #181920 to #121318
         GradientDrawable base = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{0xFF1C1C24, 0xFF121216});
+                new int[]{COLOR_CARD, 0xFF121318});
         base.setCornerRadius(r);
-        base.setStroke(dp(c, 1), 0x1FFFFFFF);
+        base.setStroke(dp(c, 1), 0x220084FF); // Stroke semi-translúcido azulado
 
-        // Micro-glow: subtle radial amber glow at the upper accent corner
+        // Micro-glow: resplandor Ice Blue radial atenuado 0x1200E5FF
         GradientDrawable glow = new GradientDrawable();
         glow.setCornerRadius(r);
         glow.setGradientType(GradientDrawable.RADIAL_GRADIENT);
         glow.setGradientRadius(dp(c, 360));
         glow.setGradientCenter(0.85f, 0.12f);
-        glow.setColors(new int[]{0x14FF6A00, 0x00FF6A00});
+        glow.setColors(new int[]{0x1200E5FF, 0x0000E5FF});
 
         return new LayerDrawable(new Drawable[]{base, glow});
     }
@@ -109,16 +121,16 @@ final class Ui {
     static Drawable carPlayCard(Context c) {
         float r = dp(c, 20);
         GradientDrawable base = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
-                new int[]{0xFF181F2C, 0xFF12151E, 0xFF0E1118});
+                new int[]{0xFF141926, 0xFF10141F, 0xFF0B0E17});
         base.setCornerRadius(r);
-        base.setStroke(dp(c, 1), 0x264A6A94);
+        base.setStroke(dp(c, 1), 0x330084FF);
 
         GradientDrawable glow = new GradientDrawable();
         glow.setCornerRadius(r);
         glow.setGradientType(GradientDrawable.RADIAL_GRADIENT);
         glow.setGradientRadius(dp(c, 360));
         glow.setGradientCenter(0.9f, 0.1f);
-        glow.setColors(new int[]{0x223B82F6, 0x003B82F6});
+        glow.setColors(new int[]{0x2200E5FF, 0x0000E5FF});
 
         return new LayerDrawable(new Drawable[]{base, glow});
     }
@@ -141,12 +153,12 @@ final class Ui {
         b.setPadding(dp(c, 24), dp(c, 12), dp(c, 24), dp(c, 12));
 
         GradientDrawable bg = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                filled ? new int[]{COLOR_AMBER, COLOR_AMBER_DEEP}
-                       : new int[]{0x28FFFFFF, 0x14FFFFFF});
+                filled ? new int[]{COLOR_ACCENT_BLUE, 0xFF0066CC}
+                       : new int[]{0x280084FF, 0x140084FF});
         bg.setCornerRadius(dp(c, 24));
-        bg.setStroke(dp(c, 1), filled ? 0x4DFFFFFF : 0x2EFFFFFF);
+        bg.setStroke(dp(c, 1), filled ? 0x6600E5FF : 0x4D0084FF);
         b.setBackground(bg);
-        b.setTextColor(filled ? COLOR_GRAPHITE_BG : Color.WHITE);
+        b.setTextColor(Color.WHITE);
         pressable(b, 0.94f);
         if (action != null) b.setOnClickListener(v -> action.run());
         return b;
@@ -163,7 +175,7 @@ final class Ui {
         return tv;
     }
 
-    /** Tactile round icon button. filled = amber disc with dark icon (primary action). */
+    /** Tactile round icon button. filled = Cyber Blue disc with white icon (primary action). */
     static ImageView iconButton(Context c, int icon, int sizeDp, boolean filled, Runnable action) {
         ImageView b = new ImageView(c);
         b.setImageResource(icon);
@@ -171,16 +183,16 @@ final class Ui {
         b.setPadding(dp(c, pad), dp(c, pad), dp(c, pad), dp(c, pad));
         if (filled) {
             GradientDrawable disc = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                    new int[]{COLOR_AMBER, COLOR_AMBER_DEEP});
+                    new int[]{COLOR_ACCENT_BLUE, 0xFF0066CC});
             disc.setShape(GradientDrawable.OVAL);
-            disc.setStroke(dp(c, 1), 0x4DFFFFFF);
+            disc.setStroke(dp(c, 1), 0x6600E5FF);
             b.setBackground(disc);
-            b.setColorFilter(COLOR_GRAPHITE_BG);
+            b.setColorFilter(Color.WHITE);
         } else {
             GradientDrawable disc = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                    new int[]{0x26FFFFFF, 0x12FFFFFF});
+                    new int[]{0x26FFFFFF, 0x10FFFFFF});
             disc.setShape(GradientDrawable.OVAL);
-            disc.setStroke(dp(c, 1), 0x24FFFFFF);
+            disc.setStroke(dp(c, 1), 0x220084FF);
             b.setBackground(disc);
             b.setColorFilter(Color.WHITE);
         }

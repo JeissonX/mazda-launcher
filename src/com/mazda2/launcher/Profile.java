@@ -70,11 +70,12 @@ final class Profile {
         return f.exists() ? BitmapFactory.decodeFile(f.getAbsolutePath()) : null;
     }
 
-    /** Car pictures bundled in build (0 when absent). Checks Mazda 2 first. */
+    /** Car pictures bundled in build (0 when absent). Checks car_mazda2 first. */
     static int bundledCar(Context c, boolean lights) {
-        int id = c.getResources().getIdentifier(lights ? "mazda2_lights" : "mazda2", "drawable", c.getPackageName());
+        if (lights) return 0;
+        int id = c.getResources().getIdentifier("car_mazda2", "drawable", c.getPackageName());
         if (id != 0) return id;
-        return c.getResources().getIdentifier(lights ? "optra_lights" : "optra", "drawable", c.getPackageName());
+        return c.getResources().getIdentifier("optra", "drawable", c.getPackageName());
     }
 
     // ---------- Device ----------

@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Mazda 2 DE Instrument Cluster Amber / Orange Accents -->
-    <color name="mazda_amber_primary">#FF6A00</color>
-    <color name="mazda_amber_deep">#E65100</color>
-    <color name="mazda_amber_light">#FFA726</color>
-    <color name="mazda_amber_glow">#4DFF6A00</color>
-    <color name="mazda_amber_subtle">#26FF6A00</color>
+    <!-- Tesla / CarPlay Cyber Blue & Ice Glow Accents -->
+    <color name="color_accent_blue">#0084FF</color>
+    <color name="color_accent_blue_light">#00AAFF</color>
+    <color name="color_glow_ice">#00E5FF</color>
+    <color name="color_glow_ice_subtle">#1200E5FF</color>
+    <color name="color_accent_blue_subtle">#220084FF</color>
 
-    <!-- Deep Graphite Night Theme (Mazda 2 Dashboard Harmony) -->
-    <color name="mazda_graphite_bg">#121212</color>
-    <color name="mazda_graphite_surface">#1E1E1E</color>
-    <color name="mazda_graphite_card">#16161A</color>
-    <color name="mazda_graphite_dock">#0D0D11</color>
-    <color name="mazda_graphite_stroke">#2A2A30</color>
-    <color name="mazda_graphite_stroke_amber">#33FF6A00</color>
+    <!-- Tesla Alert Red (Alerts, Warnings & Brakes) -->
+    <color name="color_alert_red">#E82127</color>
+    <color name="color_alert_red_dark">#B71C1C</color>
+
+    <!-- Deep Carbon & Slate Dark Surface (Tesla / CarPlay Dashboard) -->
+    <color name="color_bg_dark">#0D0E12</color>
+    <color name="color_surface">#15161C</color>
+    <color name="color_card">#181920</color>
+    <color name="color_dock">#0A0B0E</color>
+    <color name="color_stroke_steel">#220084FF</color>
+    <color name="color_stroke_subtle">#1FFFFFFF</color>
 
     <!-- Telltales, Status and Text -->
-    <color name="mazda_text_white">#FFFFFF</color>
-    <color name="mazda_text_secondary">#B3FFFFFF</color>
-    <color name="mazda_text_muted">#80FFFFFF</color>
-    <color name="mazda_telltale_lights">#00E676</color>
-    <color name="mazda_status_ok">#00E676</color>
-    <color name="mazda_status_warn">#FF9800</color>
-    <color name="mazda_status_alert">#D32F2F</color>
+    <color name="color_text_white">#F5F5F7</color>
+    <color name="color_text_secondary">#B3FFFFFF</color>
+    <color name="color_text_muted">#80FFFFFF</color>
+    <color name="color_telltale_lights">#00E676</color>
+    <color name="color_status_ok">#00E676</color>
+    <color name="color_status_warn">#E82127</color>
+    <color name="color_status_alert">#E82127</color>
 </resources>

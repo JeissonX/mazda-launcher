@@ -50,8 +50,7 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
     private boolean hasGpsFix = false;
 
     // Tarjeta del vehículo Mazda 2 DE y luces
-    private ImageView car, carLights, lightsTelltale;
-    private boolean hasLightsImage;
+    private ImageView car, lightsTelltale;
     private TextView oilInfo;
     private GradientDrawable oilBg;
 
@@ -161,43 +160,34 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         speedView = new TextView(this);
         speedView.setText(String.valueOf(Math.round(displayedSpeed)));
         speedView.setTextSize(54);
-        speedView.setTextColor(Ui.COLOR_AMBER);
+        speedView.setTextColor(0xFFF5F5F7);
         speedView.setTypeface(Typeface.DEFAULT_BOLD);
         speedView.setIncludeFontPadding(false);
         speedView.setGravity(Gravity.CENTER);
         speedBox.addView(speedView);
 
-        speedUnitView = Ui.text(this, "KM/H", 12, Ui.COLOR_AMBER_LIGHT);
+        speedUnitView = Ui.text(this, "KM/H", 12, 0x99A0AEC0);
         speedUnitView.setTypeface(Typeface.DEFAULT_BOLD);
         speedUnitView.setLetterSpacing(0.18f);
         speedBox.addView(speedUnitView);
         card.addView(speedBox);
 
-        // 3. Silueta del Mazda 2 Hatchback (chasis DE)
+        // 3. Foto real del Mazda 2 Hatchback (chasis DE)
         FrameLayout carBox = new FrameLayout(this);
         car = new ImageView(this);
         car.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        carLights = new ImageView(this);
-        carLights.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        carLights.setAlpha(0f);
+        car.setAdjustViewBounds(true);
 
         android.graphics.Bitmap own = Profile.carPhoto(this);
-        int bundled = Profile.bundledCar(this, false), bundledLights = Profile.bundledCar(this, true);
+        int bundled = Profile.bundledCar(this, false);
         if (own != null) {
             car.setImageBitmap(own);
         } else if (bundled != 0) {
             car.setImageResource(bundled);
-            if (bundledLights != 0) {
-                carLights.setImageResource(bundledLights);
-                hasLightsImage = true;
-            }
         } else {
-            car.setImageResource(R.drawable.mazda2);
-            carLights.setImageResource(R.drawable.mazda2_lights);
-            hasLightsImage = true;
+            car.setImageResource(R.drawable.car_mazda2);
         }
-        carBox.addView(car, new FrameLayout.LayoutParams(-1, -1));
-        carBox.addView(carLights, new FrameLayout.LayoutParams(-1, -1));
+        carBox.addView(car, new FrameLayout.LayoutParams(-1, -1, Gravity.CENTER));
         carBox.setOnClickListener(v -> startActivity(new Intent(this, SetupActivity.class)));
         LinearLayout.LayoutParams clp = new LinearLayout.LayoutParams(-1, 0, 1f);
         clp.setMargins(dp(8), dp(2), dp(8), dp(2));
@@ -232,10 +222,10 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         top.setGravity(Gravity.CENTER_VERTICAL);
         ImageView icon = new ImageView(this);
         icon.setImageResource(R.drawable.ic_carplay);
-        icon.setColorFilter(0xFF60A5FA);
+        icon.setColorFilter(0xFF00AAFF);
         top.addView(icon, new LinearLayout.LayoutParams(dp(26), dp(26)));
 
-        TextView badge = Ui.text(this, "CARPLAY / ZLINK", 11, 0xFF93C5FD);
+        TextView badge = Ui.text(this, "CARPLAY / ZLINK", 11, Ui.COLOR_ACCENT_BLUE_LIGHT);
         badge.setTypeface(Typeface.DEFAULT_BOLD);
         badge.setLetterSpacing(0.12f);
         badge.setPadding(dp(8), 0, 0, 0);
@@ -276,7 +266,7 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         LinearLayout headerRow = new LinearLayout(this);
         headerRow.setGravity(Gravity.CENTER_VERTICAL);
 
-        greetingText = Ui.text(this, "Bienvenido", 13, Ui.COLOR_AMBER);
+        greetingText = Ui.text(this, "Bienvenido", 13, Ui.COLOR_ACCENT_BLUE);
         greetingText.setTypeface(Typeface.DEFAULT_BOLD);
         greetingText.setGravity(Gravity.START);
         headerRow.addView(greetingText, new LinearLayout.LayoutParams(0, -2, 1f));
@@ -331,7 +321,7 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
 
         // Si Pico y Placa está activado opcionalmente, mostrar estado; si está desactivado, cero cálculo y cero contenedores
         if (Profile.picoPlacaEnabled(this)) {
-            TextView picoView = Ui.text(this, "Pico y Placa activo", 11, Ui.COLOR_AMBER_LIGHT);
+            TextView picoView = Ui.text(this, "Pico y Placa activo", 11, Ui.COLOR_ACCENT_BLUE_LIGHT);
             picoView.setGravity(Gravity.START);
             picoView.setPadding(0, dp(4), 0, 0);
             card.addView(picoView);
@@ -354,14 +344,14 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         LinearLayout top = new LinearLayout(this);
         top.setGravity(Gravity.CENTER_VERTICAL);
 
-        songSource = Ui.text(this, "USB / MÚSICA LOCAL", 11, Ui.COLOR_AMBER);
+        songSource = Ui.text(this, "USB / MÚSICA LOCAL", 11, Ui.COLOR_ACCENT_BLUE);
         songSource.setTypeface(Typeface.DEFAULT_BOLD);
         songSource.setLetterSpacing(0.12f);
         songSource.setPadding(dp(12), dp(4), dp(12), dp(4));
         GradientDrawable chip = new GradientDrawable();
-        chip.setColor(0x28FF6A00);
+        chip.setColor(0x220084FF);
         chip.setCornerRadius(dp(12));
-        chip.setStroke(dp(1), 0x4DFF6A00);
+        chip.setStroke(dp(1), 0x4D0084FF);
         songSource.setBackground(chip);
         top.addView(songSource, new LinearLayout.LayoutParams(-2, -2));
 
@@ -419,7 +409,7 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
 
         View progressFill = new View(this);
         GradientDrawable fillD = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
-                new int[]{Ui.COLOR_AMBER, Ui.COLOR_AMBER_LIGHT});
+                new int[]{Ui.COLOR_ACCENT_BLUE, Ui.COLOR_GLOW_ICE});
         fillD.setCornerRadius(dp(2));
         progressFill.setBackground(fillD);
         progressBar.addView(progressFill, new FrameLayout.LayoutParams(dp(120), -1));
@@ -485,8 +475,8 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         dock.setPadding(dp(16), 0, dp(16), 0);
 
         GradientDrawable dockBg = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{Ui.COLOR_GRAPHITE_DOCK, 0xFF08080A});
-        dockBg.setStroke(dp(1), 0x1AFFFFFF);
+                new int[]{Ui.COLOR_DOCK, 0xFF08080A});
+        dockBg.setStroke(dp(1), 0x220084FF);
         dock.setBackground(dockBg);
 
         // 1. [CarPlay / Zlink]
@@ -508,9 +498,9 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
 
         FrameLayout pill = new FrameLayout(this);
         GradientDrawable pillBg = new GradientDrawable();
-        pillBg.setColor(0x0DFFFFFF);
+        pillBg.setColor(0x0F0084FF);
         pillBg.setCornerRadius(dp(22));
-        pillBg.setStroke(dp(1), 0x1AFFFFFF);
+        pillBg.setStroke(dp(1), 0x220084FF);
         pill.setBackground(pillBg);
 
         ImageView iv = new ImageView(this);
@@ -676,9 +666,6 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
             lightsTelltale.animate().alpha(on ? 1f : 0.35f).setDuration(400).start();
             lightsTelltale.setColorFilter(on ? 0xFF00E676 : 0x40FFFFFF);
         }
-        if (!hasLightsImage) return;
-        if (carLights != null) carLights.animate().alpha(on ? 1f : 0f).setDuration(600).start();
-        if (car != null) car.animate().alpha(on ? 0f : 1f).setDuration(600).start();
     }
 
     private void updateGreeting() {
@@ -700,12 +687,12 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         int left = Odometer.remainingKm(this);
         if (left < 0) {
             vehicleStatusText.setText("⚠️ Aceite vencido");
-            vehicleStatusText.setTextColor(0xFFD32F2F);
-            if (vehicleStatusBg != null) vehicleStatusBg.setColor(0x33D32F2F);
+            vehicleStatusText.setTextColor(0xFFE82127);
+            if (vehicleStatusBg != null) vehicleStatusBg.setColor(0x33E82127);
         } else if (left <= Odometer.WARN_KM) {
             vehicleStatusText.setText("⚠️ Cambio en " + OilActivity.fmt(left) + " km");
-            vehicleStatusText.setTextColor(0xFFFFA726);
-            if (vehicleStatusBg != null) vehicleStatusBg.setColor(0x33FFA726);
+            vehicleStatusText.setTextColor(0xFFE82127);
+            if (vehicleStatusBg != null) vehicleStatusBg.setColor(0x33E82127);
         } else {
             vehicleStatusText.setText("● Todo en orden");
             vehicleStatusText.setTextColor(0xFF00E676);
@@ -724,13 +711,16 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         int life = Odometer.lifePercent(this);
         if (left < 0) {
             oilInfo.setText("Aceite: ¡vencido (" + OilActivity.fmt(-left) + " km)!");
-            oilBg.setColor(0xCCD32F2F);
+            oilInfo.setTextColor(Color.WHITE);
+            oilBg.setColor(0xCCE82127);
         } else if (left <= Odometer.WARN_KM) {
             oilInfo.setText("Aceite: faltan " + OilActivity.fmt(left) + " km (" + life + "%)");
-            oilBg.setColor(0xCCFF9800);
+            oilInfo.setTextColor(Color.WHITE);
+            oilBg.setColor(0xCCE82127);
         } else {
             oilInfo.setText("Aceite: faltan " + OilActivity.fmt(left) + " km (" + life + "%)");
-            oilBg.setColor(0x26FF6A00);
+            oilInfo.setTextColor(0xFF00AAFF);
+            oilBg.setColor(0x260084FF);
         }
     }
 
@@ -783,10 +773,6 @@ public class MainActivity extends Activity implements NowPlaying.Listener, Locat
         if (lightsTelltale != null) {
             lightsTelltale.setAlpha(lights ? 1f : 0.35f);
             lightsTelltale.setColorFilter(lights ? 0xFF00E676 : 0x40FFFFFF);
-        }
-        if (hasLightsImage) {
-            if (carLights != null) carLights.setAlpha(lights ? 1f : 0f);
-            if (car != null) car.setAlpha(lights ? 0f : 1f);
         }
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             try {

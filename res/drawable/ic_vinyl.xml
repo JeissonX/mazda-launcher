@@ -39,16 +39,16 @@
         android:fillColor="#10FFFFFF"
         android:pathData="M4,50 L4,42 L48,48 L48,50 Z M96,50 L96,58 L52,52 L52,50 Z" />
 
-    <!-- Center Label Disc (Mazda Amber) -->
+    <!-- Center Label Disc (Cyber Blue & Ice Accent) -->
     <path
-        android:fillColor="#FF6A00"
-        android:strokeColor="#FFA726"
+        android:fillColor="#0084FF"
+        android:strokeColor="#00E5FF"
         android:strokeWidth="1.0"
         android:pathData="M50,32 A18,18 0 1,0 50,68 A18,18 0 1,0 50,32 Z" />
 
     <!-- Inner Label Accent Ring -->
     <path
-        android:strokeColor="#E65100"
+        android:strokeColor="#0055B3"
         android:strokeWidth="0.8"
         android:pathData="M50,38 A12,12 0 1,0 50,62 A12,12 0 1,0 50,38 Z" />
 

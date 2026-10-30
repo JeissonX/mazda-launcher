@@ -75,12 +75,12 @@ public class OilActivity extends Activity {
         statusBg = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
                 new int[]{0xFF1E1E26, 0xFF121218});
         statusBg.setCornerRadius(dp(18));
-        statusBg.setStroke(dp(1), 0x33FF6A00);
+        statusBg.setStroke(dp(1), 0x330084FF);
         card.setBackground(statusBg);
 
         LinearLayout topRow = new LinearLayout(this);
         topRow.setGravity(Gravity.CENTER_VERTICAL);
-        remainingHeader = Ui.text(this, "VIDA DEL ACEITE", 12, Ui.COLOR_AMBER);
+        remainingHeader = Ui.text(this, "VIDA DEL ACEITE", 12, Ui.COLOR_ACCENT_BLUE);
         remainingHeader.setTypeface(Typeface.DEFAULT_BOLD);
         remainingHeader.setLetterSpacing(0.14f);
         topRow.addView(remainingHeader, new LinearLayout.LayoutParams(0, -2, 1f));
@@ -89,7 +89,7 @@ public class OilActivity extends Activity {
         percentBadge.setTypeface(Typeface.DEFAULT_BOLD);
         percentBadge.setPadding(dp(10), dp(4), dp(10), dp(4));
         GradientDrawable pBg = new GradientDrawable();
-        pBg.setColor(0x26FF6A00);
+        pBg.setColor(0x260084FF);
         pBg.setCornerRadius(dp(12));
         percentBadge.setBackground(pBg);
         topRow.addView(percentBadge);
@@ -137,7 +137,7 @@ public class OilActivity extends Activity {
         card.setBackground(Ui.card(this));
 
         // Botón de acción rápida
-        card.addView(action("Registrar cambio de aceite hoy", 0xFFE65100, () -> {
+        card.addView(action("Registrar cambio de aceite hoy", Ui.COLOR_ACCENT_BLUE, () -> {
             Odometer.resetToNow(this);
             Toast.makeText(this, "¡Listo! Ciclo reiniciado a 5.000 km", Toast.LENGTH_SHORT).show();
             refresh();
@@ -195,8 +195,8 @@ public class OilActivity extends Activity {
         GradientDrawable bg = new GradientDrawable();
         bg.setColor(color);
         bg.setCornerRadius(dp(14));
-        if (color == 0xFFE65100) {
-            bg.setStroke(dp(1), Ui.COLOR_AMBER);
+        if (color == Ui.COLOR_ACCENT_BLUE) {
+            bg.setStroke(dp(1), Ui.COLOR_GLOW_ICE);
         }
         b.setBackground(bg);
         Ui.pressable(b, 0.96f);
@@ -252,19 +252,19 @@ public class OilActivity extends Activity {
 
         if (rem < 0) {
             remainingValue.setText("¡Vencido (" + fmt(-rem) + " km)!");
-            remainingValue.setTextColor(0xFFD32F2F);
-            statusBg.setColors(new int[]{0xCCD32F2F, 0xFF301010});
-            updateProgressBar(0, 0xFFD32F2F);
+            remainingValue.setTextColor(Ui.COLOR_ALERT_RED);
+            statusBg.setColors(new int[]{0xCCE82127, 0xFF301010});
+            updateProgressBar(0, Ui.COLOR_ALERT_RED);
         } else if (rem <= Odometer.WARN_KM) {
             remainingValue.setText("Restantes: " + fmt(rem) + " km");
-            remainingValue.setTextColor(0xFFFFA726);
-            statusBg.setColors(new int[]{0xCCFF9800, 0xFF302010});
-            updateProgressBar(life, 0xFFFFA726);
+            remainingValue.setTextColor(Ui.COLOR_ALERT_RED);
+            statusBg.setColors(new int[]{0xCCE82127, 0xFF301010});
+            updateProgressBar(life, Ui.COLOR_ALERT_RED);
         } else {
             remainingValue.setText("Restantes: " + fmt(rem) + " km");
             remainingValue.setTextColor(Color.WHITE);
-            statusBg.setColors(new int[]{0xFF1E1E26, 0xFF121218});
-            updateProgressBar(life, 0xFF00E676);
+            statusBg.setColors(new int[]{0xFF181920, 0xFF121318});
+            updateProgressBar(life, Ui.COLOR_ACCENT_BLUE);
         }
 
         drivenValue.setText("Recorridos con este aceite: " + fmt(driven) + " km");
@@ -276,10 +276,10 @@ public class OilActivity extends Activity {
             GradientDrawable bg = new GradientDrawable();
             bg.setCornerRadius(dp(12));
             boolean active = (INTERVALS[i] == interval);
-            bg.setColor(active ? Ui.COLOR_AMBER : 0x1FFFFFFF);
-            if (active) bg.setStroke(dp(1), Ui.COLOR_AMBER_LIGHT);
+            bg.setColor(active ? Ui.COLOR_ACCENT_BLUE : 0x1FFFFFFF);
+            if (active) bg.setStroke(dp(1), Ui.COLOR_GLOW_ICE);
             intervalChips[i].setBackground(bg);
-            intervalChips[i].setTextColor(active ? 0xFF121212 : Color.WHITE);
+            intervalChips[i].setTextColor(Color.WHITE);
         }
     }
 
